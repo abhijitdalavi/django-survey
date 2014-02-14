@@ -793,7 +793,7 @@ angular.module('askApp')
             }
 
             if ($scope.question && $scope.question.type === 'info' && $scope.question.info) {
-                $scope.infoView = 'survey-pages/' + $routeParams.surveySlug + '/' + $scope.question.info + '.html';
+                // $scope.infoView = 'survey-pages/' + $routeParams.surveySlug + '/' + $scope.question.info + '.html';
 
             }
 
