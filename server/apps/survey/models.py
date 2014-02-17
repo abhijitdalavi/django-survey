@@ -139,7 +139,7 @@ class Page(caching.base.CachingMixin, models.Model):
     survey = models.ForeignKey('Survey', null=True, blank=True)
     objects = caching.base.CachingManager()
 
-    def __str__(self):
+    def __unicode__(self):
         if self.survey is not None and self.question is not None:
             return "%s/%s (%d)" % (self.survey.name, self.question.slug, self.question.order)
 
@@ -219,7 +219,7 @@ class Survey(caching.base.CachingMixin, models.Model):
                 fields[q.slug] = q.label
         return fields
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s" % self.name
 
 
@@ -255,7 +255,7 @@ class Option(caching.base.CachingMixin, models.Model):
     max = models.IntegerField(default=None, null=True, blank=True)
     objects = caching.base.CachingManager()
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s" % self.text
 
 REPORT_TYPE_CHOICES = (
@@ -270,7 +270,7 @@ class Block(caching.base.CachingMixin, models.Model):
     skip_question = models.ForeignKey('Question', null=True, blank=True)
     skip_condition = models.CharField(max_length=254, null=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s" % self.name
 
 
@@ -377,7 +377,7 @@ class Question(caching.base.CachingMixin, models.Model):
             return (answers.values('answer')
                            .annotate(locations=Sum('respondant__locations'), surveys=Count('answer')))
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s/%s/%s (%d)" % (self.survey_slug, self.title, self.type, self.order)
         #return "%s/%s" % (self.survey_set.all()[0].slug, self.label)
 
@@ -387,7 +387,7 @@ class LocationAnswer(caching.base.CachingMixin, models.Model):
     label = models.TextField(null=True, blank=True, default=None)
     location = models.ForeignKey('Location')
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s/%s" % (self.location.response.respondant.uuid, self.answer)
 
 
@@ -397,7 +397,7 @@ class Location(caching.base.CachingMixin, models.Model):
     lat = models.DecimalField(max_digits=10, decimal_places=7)
     lng = models.DecimalField(max_digits=10, decimal_places=7)
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s/%s/%s" % (self.response.respondant.survey.slug, self.response.question.slug, self.response.respondant.uuid)
 
 
@@ -416,7 +416,7 @@ class GridAnswer(caching.base.CachingMixin, models.Model):
     answer_text = models.TextField(null=True, blank=True)
     answer_number = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s: %s" % (self.row_text, self.col_text)
 
 
