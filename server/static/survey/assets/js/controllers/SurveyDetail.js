@@ -18,6 +18,8 @@ var map = {
 };
 */
 
+
+
 function ZoomAlertCtrl($scope, dialog, $location) {
     $scope.loaded = false;
     $scope.$watch(function() {
@@ -187,14 +189,18 @@ angular.module('askApp')
             }
             if ($scope.answers[slug]) {
                 if (gridSlug) {
-                    return _.flatten(_.map($scope.answers[slug], function(answer) {
-                        return _.map(answer[gridSlug], function(gridAnswer) {
-                            return {
-                                text: answer.text + ": " + gridAnswer,
-                                label: _.string.slugify(answer.text + ": " + gridAnswer)
-                            }
-                        });
-                    }));
+                    // return _.flatten(_.map($scope.answers[slug], function(answer) {
+                    //     return _.map(answer[gridSlug], function(gridAnswer) {
+                    //         return {
+                    //             text: answer.text + ": " + gridAnswer,
+                    //             label: _.string.slugify(answer.text + ": " + gridAnswer)
+                    //         }
+                    //     });
+                    // }));
+                    var gridObject = _.findWhere($scope.answers[slug], {activitySlug: gridSlug});
+                    if (gridObject && gridObject.numberoftrips) {
+                        return gridObject.numberoftrips
+                    }
                 } else {
                     return $scope.answers[slug];
                 }
@@ -692,7 +698,6 @@ angular.module('askApp')
             }
         });
 
-
         $scope.answerSingleSelect = function(options, otherAnswer) {
             var answer = _.find(options, function(option) {
                 return option.checked;
@@ -797,12 +802,24 @@ angular.module('askApp')
 
             }
 
-            /* Specific to single and multi select for now. */
+            /* Specific to single and multi select for now. Adding use case for Integer questions (ensuring answer is within min/max specifications. */
             $scope.isAnswerValid = $scope.question && !$scope.question.required;
 
 
             if ($scope.question && $scope.question.type === 'integer') {
                 $scope.answer = parseInt($scope.getAnswer($routeParams.questionSlug), 10);
+
+                // $scope.$watch('answer', function(newValue) {
+                //     if ($scope.question && $scope.question.required && !$scope.answer) {
+                //         $scope.isAnswerValid = false;
+                //     } else if ( (($scope.question.integer_min || $scope.question.integer_min === 0) && newValue < $scope.question.integer_min) 
+                //                 || (($scope.question.integer_max || $scope.question.integer_max === 0) &&  newValue > $scope.question.integer_max) ) {
+                //         $scope.isAnswerValid = false;
+                //     } else {
+                //         $scope.isAnswerValid = true;
+                //     }
+                // }, true);
+
             } else if ($scope.question && $scope.question.options.length) {
                 $scope.answer = $scope.getAnswer($routeParams.questionSlug);
                 // check to make sure answer is in options
@@ -1459,38 +1476,66 @@ angular.module('askApp')
                     var matches = _.filter($scope.answer || [], function(answer) {
                         return answer === row || answer.text === row;
                     });
-
+                    var infoIcon = false;
+                    if (_.string.endsWith(row, '*')) {
+                        row = row.substr(0,row.length-1);
+                        infoIcon = true;
+                    }
                     $scope.question.options.push({
                         text: _.string.startsWith(row, '*') ? row.substr(1) : row,
                         label: _.string.slugify(row),
                         checked: matches.length ? true : false,
-                        isGroupName: _.string.startsWith(row, '*')
+                        isGroupName: _.string.startsWith(row, '*'),
+                        infoIcon: infoIcon
                     });
                 });
 
                 $scope.question.groupedOptions = [];
                 var groupName = "";
+                // nonVisibleGroups are for non-visible groups (groups that lack a header or title) that need to be randomized
+                var nonVisibleGroups = [];
+                var nonVisibleGroupsIndex = -1;
                 _.each($scope.question.rows.split('\n'), function(row, index) {
                     var matches = _.filter($scope.answer || [], function(answer) {
                         return answer.text === row;
                     });
                     var isGroupName = _.string.startsWith(row, '*');
-                    if (isGroupName) {
-                        groupName = row.substr(1);
-                        $scope.question.groupedOptions.push({
-                            optionLabel: groupName,
-                            options: []
-                        });
-                    } else if ($scope.question.groupedOptions.length > 0) {
-                        _.findWhere($scope.question.groupedOptions, {
-                            optionLabel: groupName
-                        }).options.push({
-                            text: row,
-                            label: _.string.slugify(row),
-                            checked: matches.length ? true : false
-                        })
+                    if (isGroupName && row.substr(1) === "") {
+                        nonVisibleGroupsIndex += 1;
+                        nonVisibleGroups[nonVisibleGroupsIndex] = [];
+                    } else {
+                        if (nonVisibleGroupsIndex > -1) {
+                            nonVisibleGroups[nonVisibleGroupsIndex].push({
+                                text: row,
+                                label: _.string.slugify(row),
+                                checked: matches.length ? true : false
+                            });
+                        } else if (isGroupName) {
+                            groupName = row.substr(1);
+                            $scope.question.groupedOptions.push({
+                                optionLabel: groupName,
+                                options: []
+                            });
+                        } else if ($scope.question.groupedOptions.length > 0) {
+                            _.findWhere($scope.question.groupedOptions, {
+                                optionLabel: groupName
+                            }).options.push({
+                                text: row,
+                                label: _.string.slugify(row),
+                                checked: matches.length ? true : false
+                            });
+                        } 
                     }
                 });
+                if ($scope.question.randomize_groups) {
+                    if (nonVisibleGroupsIndex > -1) {
+                        $scope.question.options = _.flatten(_.shuffle(_.toArray(nonVisibleGroups)));
+                    } else {
+                        // NOTE:  the following has not been verified!!!
+                        $scope.question.groupedOptions = _.shuffle(_.toArray($scope.question.groupedOptions));
+                    }
+                    
+                }
             }
             // grid question controller
             if ($scope.question && $scope.question.type === 'grid') {
@@ -1591,7 +1636,7 @@ angular.module('askApp')
             }
 
             if ($scope.question && $scope.question.type === 'datepicker') {
-                $scope.now = (new Date()).toString("dd/MM/yyyy");
+                $scope.now = (new Date()).toString("MM/dd/yyyy");
                 // if ($scope.answer) {
                 //     $scope.answer = new Date($scope.answer);
                 // }

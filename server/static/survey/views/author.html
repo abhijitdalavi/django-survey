@@ -87,6 +87,10 @@
                                 <input type="checkbox" ng-model="activeQuestion.visualize"/>
                                 Visualize
                             </label>
+                            <label ng-show="activeQuestion.type == 'multi-select'">
+                                <input type="checkbox" ng-model="activeQuestion.randomize_groups"/>
+                                Randomize Groups 
+                            </label>
                             <label ng-show="activeQuestion.visualize">Report Type</label>
                             <select class="form-control" ng-model="activeQuestion.report_type" ng-options="select as label for (key, val) in activeQuestion.report_types" ng-show="activeQuestion.visualize">
                             </select>

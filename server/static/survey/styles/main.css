@@ -132,6 +132,9 @@ p.landing, p.info {
     line-height: 26px;
     margin-bottom: 25px;
 }
+.question-title p {
+    margin-top: 10px;
+}
 .modal-header .question-title {
     font-size: 22px;
     font-weight: bold;
