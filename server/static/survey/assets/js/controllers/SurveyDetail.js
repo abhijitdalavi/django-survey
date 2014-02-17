@@ -1086,6 +1086,7 @@ angular.module('askApp')
 
             // penny question controller
             if ($scope.question && ($scope.question.type === 'pennies' || $scope.question.slug === 'pennies-intro')) {
+                //debugger;
                 if ($scope.question.options_from_previous_answer) {
                     $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[1]);
                     $scope.locations = _.filter(JSON.parse($scope.getAnswer($scope.question.options_from_previous_answer.split(',')[0])), function(location) {
@@ -1095,33 +1096,53 @@ angular.module('askApp')
                     });
                 }
 
+                if ($scope.locations.length === 1) {
+                    // One location with primary activity. 
+                    // Auto-answer with all pennies go to the one location.
+                    $scope.locations.pennies = 100;
+                    $scope.answerQuestion($scope.locations);
+                }
+
                 $scope.question.total = 100;
+
+                $timeout(function () { 
+                   map.zoom = 'ALL_MARKERS';
+                }, 1000);
 
                 _.each($scope.locations, function(location) {
                     location.pennies = null;
                     $scope.$watch(function() {
-                            return location.pennies;
-                        },
+                        return location.pennies;
+                    },
 
-                        function(newValue) {
-                            var timer;
-                            if (newValue) {
-                                if (timer) {
-                                    timer.cancel();
-                                } else {
-                                    timer = $timeout(function() {
-                                        var total = _.pluck($scope.locations, 'pennies');
-                                        var sum = _.reduce(total, function(memo, num) {
-                                            return parseInt(memo, 10) + parseInt(num ? num : 0, 10);
-                                        }, 0);
-                                        $scope.question.total = 100 - sum;
-                                    }, 300);
-                                }
-
+                    function(newValue) {
+                        var timer;
+                        if (newValue) {
+                            if (timer) {
+                                timer.cancel();
+                            } else {
+                                timer = $timeout(function() {
+                                    var total = _.pluck($scope.locations, 'pennies');
+                                    var sum = _.reduce(total, function(memo, num) {
+                                        return parseInt(memo, 10) + parseInt(num ? num : 0, 10);
+                                    }, 0);
+                                    $scope.question.total = 100 - sum;
+                                }, 300);
                             }
 
-                        });
+                        }
+
+                    });
                 });
+
+                $scope.penniesTextBox_click = function ($event) {
+                    if (_.has($event.target.attributes, "data-location-key")) {
+                        var key = $event.target.attributes["data-location-key"].value;
+                        $scope.zoomModel.zoomToResult = $scope.locations[key];
+                        map.activeMarkerKey = key;
+                    }
+                };
+
             }
 
             // map 
