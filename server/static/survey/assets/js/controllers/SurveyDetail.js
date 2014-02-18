@@ -752,7 +752,20 @@ angular.module('askApp')
                     }
                 });
             });
-            console.log(gridValidated);
+            if ($scope.question.slug === 'question-2b') {
+                var colSum = 0;
+                _.each($scope.question.options, function(gridAnswer) {
+                    if (gridAnswer.numberoftrips) {
+                        colSum += gridAnswer.numberoftrips;
+                    }
+                });
+                if (colSum === parseInt($scope.getAnswer('question-2a')) ) {
+                    gridValidated = true;
+                } else {
+                    gridValidated = false;
+                }
+            }
+            // console.log(gridValidated);
             return gridValidated;
         }
 
@@ -764,10 +777,11 @@ angular.module('askApp')
             }
 
             _.each(data.responses, function(response) {
+                var slug = response.question.slug ? response.question.slug : response.question;
                 try {
-                    $scope.answers[response.question.slug] = JSON.parse(response.answer_raw);
+                    $scope.answers[slug] = JSON.parse(response.answer_raw);
                 } catch (e) {
-                    $scope.answers[response.question.slug] = response.answer;
+                    $scope.answers[slug] = response.answer;
                 }
             });
 
