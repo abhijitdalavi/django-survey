@@ -50,7 +50,6 @@ def dash(request, survey_slug=None, template='survey/dash.html'):
 @csrf_exempt
 def answer(request, survey_slug, question_slug, uuid):
     if request.method == 'POST':
-
         survey = get_object_or_404(Survey, slug=survey_slug)
         question = get_object_or_404(Question, slug=question_slug, survey=survey)
         respondant = get_object_or_404(Respondant, uuid=uuid)

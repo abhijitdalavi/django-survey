@@ -60,7 +60,7 @@ class Respondant(caching.base.CachingMixin, models.Model):
 
     objects = caching.base.CachingManager()
 
-    def __str__(self):
+    def __unicode__(self):
         if self.email:
             return "%s" % self.email
         else:
@@ -142,6 +142,12 @@ class Page(caching.base.CachingMixin, models.Model):
     def __unicode__(self):
         if self.survey is not None and self.question is not None:
             return "%s/%s (%d)" % (self.survey.name, self.question.slug, self.question.order)
+        elif self.survey is not None:
+            return "%s/NA (NA)" % (self.survey.name)
+        elif self.question is not None:
+            return "NA/%s (%d)" % (self.question.slug, self.question.order) 
+        else:
+            return "NA/NA (NA)"
 
     class Meta:
         ordering = ['survey', 'question__order']
@@ -378,7 +384,7 @@ class Question(caching.base.CachingMixin, models.Model):
                            .annotate(locations=Sum('respondant__locations'), surveys=Count('answer')))
 
     def __unicode__(self):
-        return "%s/%s/%s (%d)" % (self.survey_slug, self.title, self.type, self.order)
+        return "%s/%s/%s/%s (%d)" % (self.survey_slug, self.slug, self.title, self.type, self.order)
         #return "%s/%s" % (self.survey_set.all()[0].slug, self.label)
 
 
@@ -441,7 +447,7 @@ class Response(caching.base.CachingMixin, models.Model):
         if self.answer_raw:
             if self.question.type in ('info', 'text', 'textarea', 'yes-no',
                                       'single-select', 'auto-single-select',
-                                      'map-multipoint', 'timepicker', 'multi-select'):
+                                      'map-multipoint', 'pennies', 'timepicker', 'multi-select'):
                 flat[self.question.slug] = self.answer
             elif self.question.type in ('currency', 'integer', 'number'):
                 flat[self.question.slug] = str(self.answer_number)
@@ -488,6 +494,18 @@ class Response(caching.base.CachingMixin, models.Model):
                     multi_answer.save()
                 self.answer = ", ".join(answers)
             elif self.question.type in ['map-multipoint'] and self.id:
+                answers = []
+                self.location_set.all().delete()
+                for point in simplejson.loads(simplejson.loads(self.answer_raw)):
+                        answers.append("%s,%s: %s" % (point['lat'], point['lng'], point['answers']))
+                        location = Location(lat=Decimal(str(point['lat'])), lng=Decimal(str(point['lng'])), response=self, respondant=self.respondant)
+                        location.save()
+                        for answer in point['answers']:
+                            answer = LocationAnswer(answer=answer['text'], label=answer['label'], location=location)
+                            answer.save()
+                        location.save()
+                self.answer = ", ".join(answers)
+            elif self.question.type in ['pennies'] and self.id:
                 answers = []
                 self.location_set.all().delete()
                 for point in simplejson.loads(simplejson.loads(self.answer_raw)):

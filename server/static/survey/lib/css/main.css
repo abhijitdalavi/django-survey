@@ -1,10 +1,19 @@
-* {
+/** {
     font-family: 'FF_DIN_GROUP', Arial, Verdana, sans-serif;
-}
+}*/
 @media (min-width: 1200px) {
   .container {
     width: 1240px;
   }
+}
+a {
+    text-decoration: none;
+}
+[type=submit] {
+    line-height: 30px;
+}
+.btn-continue {
+    line-height: 40px;
 }
 .survey_manage_icons {
     padding: 0px !important;
@@ -116,14 +125,14 @@
     bottom: 0px;
     right: 1em;
 }
-#overview_map, .map-multipoint {
+/*#overview_map, .map-multipoint {
     height: 512px;
     position: relative;
 }
 #overview_map div[leaflet], .map-multipoint div[leaflet] {
     height: 512px;
     position: relative;
-}
+}*/
 #responses_found {
     background-color: #bbcbcd !important;
     color: #FFF;
@@ -185,14 +194,14 @@
 #survey-landing-table .icon-remove {
     color: #466b71;
 }
-.btn {
+/*.btn {
     padding-left: 20px;
     padding-right: 20px;
     color: #222;
     background-color: #8cb8c3;
     border-radius: 0px;
     line-height: 2em;
-}
+}*/
 .bs_btn {
     padding-left: 12px;
     padding-right: 12px;
@@ -326,6 +335,8 @@ th.sortable_table {
 
 input.datepicker {
     color: black;
+    font-size: 18px;
+    padding: 12px !important;
 }
 #review_buttons {
     margin-top: 2em;
@@ -350,7 +361,7 @@ input.datepicker {
 }
 #question_bg a.btn, #question_bg button.btn {
     border: 0px;
-    color: #424143;
+    /*color: #424143;*/
 }
 #question_bg h2 {
     color: #424143;

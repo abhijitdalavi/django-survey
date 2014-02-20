@@ -19,8 +19,9 @@
 
         <div zoomto onload="openModal()" states="survey.states" zoomtoresult="zoomModel.zoomToResult" numlocations="locations.length"></div>
 
-        <div class="btn-group">
-            <a  class="btn btn-large btn-inverse btn-my-activities" 
+        <div id="my-activities-div" class="btn-group">
+            <a  id="my-activities-button"
+                class="btn btn-large btn-inverse btn-my-activities" 
                 ng-click="showActivities()"
                 href="javascript:void(0)"
                 data-html="true"
@@ -33,7 +34,8 @@
 
     <div class="map-controls map-controls-top-right">
         <div class="btn-group">
-            <a  class="btn btn-large btn-primary btn-add-marker"
+            <a  id="add-marker-button"
+                class="btn btn-large btn-primary btn-add-marker"
                 ng-class="{'btn-danger': !isZoomedIn() && isCrosshairAlerting, 'btn-primary': isZoomedIn() || !isCrosshairAlerting }"
                 ng-click="addMarker()"
                 href="javascript:void(0)">

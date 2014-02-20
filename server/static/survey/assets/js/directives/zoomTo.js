@@ -17,7 +17,29 @@ function ZoomToCtrl($scope, dialog, $http, $timeout, $location) {
             $scope.panes[paneName].showing = true;
             $scope.currentPane = $scope.panes[paneName];
         }
+        $scope.onResize();
     };
+
+    $scope.onResize = function () {
+        $timeout(function () {
+            // Set modal body height to allow scrolling.
+            var m = jQuery('.modal').height(),
+                h = jQuery('.modal-header:visible').outerHeight(),
+                f = jQuery('.modal-footer:visible').outerHeight(),
+                b = jQuery(window).width() < 601 ? m - h - f : 'auto';
+            jQuery('.modal-body').height(b);
+            jQuery('.modal-body').css('margin-bottom', f+'px');
+        }, 0);
+    };
+    $timeout(function () {
+        jQuery(window).resize($scope.onResize);
+    }, 0);
+    $scope.onResize();
+
+    $timeout(function () {
+        document.getElementById("search-query").focus();
+    }, 20);
+
     $scope.show('search');
 
     $scope.results = [];
@@ -46,6 +68,7 @@ function ZoomToCtrl($scope, dialog, $http, $timeout, $location) {
                     $scope.showSpinner = false;
                     $scope.showNoResults = $scope.results.length == 0 && $scope.searchTerm && $scope.searchTerm.length > 0;
                 });
+                logger.logUsage('search-term-typed', $scope.searchTerm);
             }, 1000);
         } else {
             $scope.results = [];
@@ -54,8 +77,19 @@ function ZoomToCtrl($scope, dialog, $http, $timeout, $location) {
         }
     });
 
-    $scope.setZoomToPlace = function (place) {
+    $scope.searchResult_clicked = function (place) {
         $scope.selectedPlace = place;
+        $scope.showMapUsage();
+    };
+
+    $scope.manualZoomLink_clicked = function () {
+        $scope.selectedPlace = null;
+        $scope.showMapUsage();
+    };
+
+    $scope.showMapUsage = function () {
+        $scope.show('mapUsage');
+        logger.logUsage('map-usage-shown', '');
     };
 
     $scope.close = function() {
@@ -79,7 +113,7 @@ angular.module('askApp')
     .directive('zoomto', function($dialog) {
 
     return {
-        template: '<div><div class="control-group large-screen"><i class="icon-search icon-large"></i><input type="text" id="search-query-facade" placeholder="Search" ng-click="openModal()"></div><a class="btn btn-large btn-search small-screen" ng-click="openModal()"><i class="icon-search icon-large"></i></a></div>',
+        template: '<div><div id="map-search-control-group" class="control-group large-screen"><i class="icon-search icon-large"></i><input type="text" id="search-query-facade" placeholder="Search" ng-click="openModal()"></div><a class="btn btn-large btn-search small-screen" ng-click="openModal()"><i class="icon-search icon-large"></i></a></div>',
         restrict: 'EA',
         replace: true,
         transclude: true,

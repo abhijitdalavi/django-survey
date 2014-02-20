@@ -24,6 +24,13 @@
     width: 100%;
     height: 400px;
 }
+.map-multipoint div[leaflet] {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
 .leaflet-container .leaflet-control-attribution {
     font-size: 9px;
     background: white\9;
@@ -41,15 +48,105 @@
  */
 .map-controls-top-left {
     position: absolute;
-    top: 0;
-    left: 5px;
+    top: 10px;
+    left: 20px;
     z-index: 10;
+    color: #34495e;
 }
 .map-controls-top-right {
     position: absolute;
-    top: 9px;
-    right: 5px;
+    top: 15px;
+    right: 15px;
     z-index: 10;
+}
+.map-controls-top-right .btn-done-mapping {
+    background-color: rgb(238, 238, 238);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 17px;
+    line-height: 20px;
+    padding-bottom: 12px;
+    padding-top: 13px;
+}
+#map-search-control-group {
+    float: left;
+}
+#map-search-control-group .icon-search {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+}
+.icon-search {
+    margin-top: 5px;    
+}
+#search-query-facade {
+    border: 2px solid #dce4ec;
+    padding: 10px 0 9px 40px !important;
+    text-indent: 1px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px !important;
+    float: inherit !important;
+}
+#my-activities-div {
+    color: rgb(52, 73, 94);
+    display: inline-block;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0px;
+    height: 45px;
+    line-height: 20px;
+    position: relative;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 165px;
+}
+#my-activities-button {
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: rgb(238, 238, 238);
+    line-height: 20px;
+    padding-bottom: 12px;
+    padding-top: 13px;
+    border-radius: 6px;
+    background-image: inherit;
+}
+#my-activities-button:hover {
+    background: #4e6d8d;
+}
+#my-activities-button:hover .map-control-label {
+    color: white;
+}
+#my-activities-button:hover .icon-list {
+    color: white;
+}
+#my-activities-button .icon-list {
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    vertical-align: middle;
+}
+#my-activities-button .map-control-label {
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    display: inline;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 18px;
+    height: auto;
+    line-height: 20px;
+    text-align: center;
+    text-shadow: none;
+    white-space: nowrap;
+    width: auto;
+}
+#add-marker-button {
+    background-color: #1abc9c;
+    color: white !important;
+    font-size: 18px;
+    border-radius: 6px;
+    background-image: inherit;
+    line-height: 25px;
+}
+#add-marker-button:hover {
+    background-color: #2fe2bf;
 }
 .btn-done-mapping, .btn-add-marker {
     margin-left: 5px
@@ -60,14 +157,29 @@
 .btn-done-mapping.small-screen {
     display: none;
 }
-.btn-my-activities, .btn-help, .btn-done-mapping, .btn-search {
+.btn-my-activities, 
+.btn-done-mapping, 
+.btn-search, 
+.geosurvey-map-control-layers-toggle .btn {
     background-color: #eee;
     color: black;
 }
-.map-controls .btn, .leaflet-control-layers a, .btn-done-mapping {
+.map-controls .btn, 
+.leaflet-control-layers a, 
+.btn-search, 
+.btn-my-activities, 
+.btn-done-mapping, 
+.geosurvey-map-control-layers-toggle .btn {
     -webkit-box-shadow: 0 2px 2px rgba(0,0,0,.3);
        -moz-box-shadow: 0 2px 2px rgba(0,0,0,.3);
             box-shadow: 0 2px 2px rgba(0,0,0,.3);
+}
+.geosurvey-map-control-layers-toggle .btn {
+    font-size: 14px;
+    padding: 8px 11px;
+    border-radius: 6px;
+    height: 36px;
+    padding-top: 5px;
 }
 .leaflet-control-container .leaflet-top.leaflet-left {
     /* the zoom control is being forced to bottom left 
@@ -77,11 +189,21 @@
     top: auto;
     left: 15px;
 }
+.map-multipoint .leaflet-control-container .leaflet-top.leaflet-left {
+    /* the zoom control is being forced to bottom left 
+    while staying in the top left class (if time available, 
+    we should just move the control the the bottom left class) */
+    bottom: 70px;
+    top: auto;
+    left: 15px;
+}
 .leaflet-control-container .leaflet-bottom.leaflet-left {
     /* the layers control  just above the zoom control */
-    bottom: 85px;
+    bottom: 15px;
     left: 13px;
+    z-index: 10; /* higher than map attribution*/
 }
+
 @media (max-width: 790px) {
     .btn-help .map-control-label {
         display: none;
@@ -252,7 +374,7 @@ div[zoomto] .small-screen {
 .modal-body {
     margin-bottom: 73px;
     max-height: 400px;
-    overflow-y:scroll;
+    /*overflow-y:scroll;*/
 }
 
 
@@ -385,7 +507,7 @@ div[zoomto] .small-screen {
 .modal-zoomto .icon-search, .modal-zoomto .icon-spinner {
     position: absolute;
     left: -10px;
-    top: 6px;
+    top: 10px;
 }
 .modal-zoomto input.search-query {
     height: 24px !important; 

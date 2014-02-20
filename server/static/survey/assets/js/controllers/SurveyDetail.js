@@ -1,7 +1,7 @@
 //'use strict';
 
 
-/*
+
 var map = {
     center: {
         lat: 47,
@@ -16,7 +16,7 @@ var map = {
     },
     msg: null
 };
-*/
+
 
 
 
@@ -353,7 +353,13 @@ angular.module('askApp')
                     return answer === testCriteria;
                 } else if (_.str.include(testCriteria, '|')) { // if condition is a list
                     // keep if intersection of condition list and answer list is populated
-                    return _.intersection(testCriteria.split('|'), answer).length > 0;
+                    if (_.isArray(answer)) {
+                        var trimmedAnswers = _.map(answer, function(a) { return a.trim(); });
+                        return _.intersection(testCriteria.split('|'), trimmedAnswers).length > 0;
+                    } else {
+                        var trimmedAnswer = answer.trim();
+                        return _.intersection(testCriteria.split('|'), trimmedAnswer).length > 0;
+                    }
                 } else { // otherwise, condition is a string, keep if condition string is contained in the answer
                     return _.contains(answer, testCriteria);
                 }
@@ -586,7 +592,7 @@ angular.module('askApp')
             });
 
             // in case of multiselect containing groups 
-            if (question.groupedOptions.length) {
+            if (question.groupedOptions && question.groupedOptions.length) {
                 answers = [];
                 _.each(question.groupedOptions, function(groupedOption) {
                     answers = answers.concat(_.filter(groupedOption.options, function(option) {
@@ -690,6 +696,8 @@ angular.module('askApp')
             if ($scope.question && $scope.question.required && !$scope.answer) {
                 if ($scope.question.allow_other && $scope.question.otherOption && $scope.question.otherOption.checked && $scope.question.otherAnswer && $scope.question.otherAnswer.length > 0) {
                     $scope.isAnswerValid = true;
+                } else if ($scope.question.type === 'multi-select' && $scope.validateMultiSelect($scope.question)) {
+                    $scope.isAnswerValid = true;
                 } else {
                     $scope.isAnswerValid = false;
                 }
@@ -764,6 +772,20 @@ angular.module('askApp')
                 } else {
                     gridValidated = false;
                 }
+            }
+            if ($scope.question.slug === 'question-5') {
+                var colSum = 0;
+                gridValidated = true;
+                _.each($scope.question.options, function(gridAnswer) {
+                    if (gridAnswer.numberofoutdoorrecreationtrips) {
+                        colSum += gridAnswer.numberofoutdoorrecreationtrips;
+                    } else {
+                        gridValidated = false;
+                    }
+                });
+                if (colSum > 0) {
+                    gridValidated = true;
+                } 
             }
             // console.log(gridValidated);
             return gridValidated;
@@ -870,6 +892,7 @@ angular.module('askApp')
                 }
             }
             // Fill options list.
+
             if ($scope.question && $scope.question.options_json && $scope.question.options_json.length > 0 && !$scope.question.options_from_previous_answer) {
                 // Using the provided json file to set options.
 
@@ -952,7 +975,6 @@ angular.module('askApp')
                         $scope.isAnswerValid = $scope.validateMultiSelect($scope.question);
                     }
                 });
-
             } else if ($scope.question && $scope.question.options_from_previous_answer && $scope.question.slug === 'county') {
                 // County question is dependent on state answer to retrieve a
                 // json file of counties for the selected state.
@@ -985,7 +1007,31 @@ angular.module('askApp')
                 }).error(function(data, status, headers, config) {
                     $scope.gotoNextQuestion();
                 });
-            }
+            } else if ($scope.question && $scope.question.hoist_answers) {
+                // Hoist options
+                if ($scope.question && $scope.question.hoist_answers) {
+                    $scope.question.hoisted_options = [];
+                    var answer = $scope.getAnswer($scope.question.hoist_answers.slug);
+                    if (answer.length) {
+                        _.each($scope.getAnswer($scope.question.hoist_answers.slug), function(option) {
+                            var newOption = {
+                                text: option.text,
+                                label: option.label,
+                                checked: option.checked
+                            };
+
+                            $scope.question.hoisted_options.unshift(newOption);
+                        });
+                    } else {
+                        $scope.question.hoisted_options.push(answer);
+                    }                    
+                }
+                // the following is unnecessary as the watch on question.otherAnswer overrides isAnswerValid 
+                // if ($scope.question.type === "multi-select") {
+                //     $scope.isAnswerValid = $scope.validateMultiSelect($scope.question);
+                // }
+               
+            } 
 
             if ($scope.question && $scope.question.type === 'yes-no') {
                 if ($scope.answer && _.isArray($scope.answer)) {
@@ -1091,6 +1137,8 @@ angular.module('askApp')
                         marker: marker,
                         msg: null
                     };
+                } else {
+                    $scope.map = map;
                 }
                 //$scope.map = map;
                 //$scope.map.center.lat = $scope.question.lat || map.center.lat;
@@ -1102,7 +1150,8 @@ angular.module('askApp')
             if ($scope.question && ($scope.question.type === 'pennies' || $scope.question.slug === 'pennies-intro')) {
                 //debugger;
                 if ($scope.question.options_from_previous_answer) {
-                    $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[1]);
+                    // $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[0]);
+                    $scope.primaryActivity = $scope.question.hoisted_options[0];
                     $scope.locations = _.filter(JSON.parse($scope.getAnswer($scope.question.options_from_previous_answer.split(',')[0])), function(location) {
                         return _.some(location.answers, function(item) {
                             return item.label === $scope.primaryActivity.label;
@@ -1243,10 +1292,11 @@ angular.module('askApp')
                             color: $scope.getNextColor()
                         };
                         $scope.locations.push($scope.activeMarker);
-                        //$timeout(function() {
-                        //    $scope.showAddLocationDialog();
-                        //}, 400);
-                        $scope.finishMapQuestion();
+                        $timeout(function() {
+                           $scope.showAddLocationDialog();
+                        }, 400);
+                        // $scope.finishMapQuestion();
+                        $scope.isCrosshairAlerting = false;
                     }
                     $scope.updateCrosshair();
                 };
@@ -1300,7 +1350,7 @@ angular.module('askApp')
                         backdrop: true,
                         keyboard: false,
                         backdropClick: false,
-                        templateUrl: 'views/locationActivitiesModal.html',
+                        templateUrl: app.viewPath + 'views/locationActivitiesModal.html',
                         controller: 'ActivitySelectorDialogCtrl',
                         resolve: {
                             question: function() {
@@ -1350,7 +1400,7 @@ angular.module('askApp')
                         backdropClick: false,
                         backdropFade: true,
                         transitionClass: 'fade',
-                        templateUrl: 'views/zoomAlertModal.html',
+                        templateUrl: app.viewPath + 'views/zoomAlertModal.html',
                         controller: 'ZoomAlertCtrl'
                     });
                     d.open();
@@ -1363,7 +1413,7 @@ angular.module('askApp')
                         backdropClick: false,
                         backdropFade: true,
                         transitionClass: 'fade',
-                        templateUrl: 'views/outOfBoundsAlertModal.html',
+                        templateUrl: app.viewPath + 'views/outOfBoundsAlertModal.html',
                         controller: 'OutOfBoundsAlertCtrl'
                     });
                     d.open();
@@ -1374,7 +1424,7 @@ angular.module('askApp')
                         backdrop: true,
                         keyboard: true,
                         backdropClick: false,
-                        templateUrl: 'views/activitiesModal.html',
+                        templateUrl: app.viewPath + 'views/activitiesModal.html',
                         scope: {
                             hoisted_options: $scope.getAnswer($scope.question.modalQuestion.hoist_answers.slug),
                             locations: $scope.locations,
@@ -1392,7 +1442,7 @@ angular.module('askApp')
                         backdrop: true,
                         keyboard: false,
                         backdropClick: false,
-                        templateUrl: 'views/addMoreModal.html',
+                        templateUrl: app.viewPath + 'views/addMoreModal.html',
                         controller: 'addMoreDialogCtrl',
                         resolve: {
                             remainingActivities: function() {
@@ -1420,7 +1470,7 @@ angular.module('askApp')
                         backdrop: true,
                         keyboard: false,
                         backdropClick: false,
-                        templateUrl: 'views/doneModal.html',
+                        templateUrl: app.viewPath + 'views/doneModal.html',
                         controller: 'DoneDialogCtrl',
                         resolve: {
                             remainingActivities: function() {
@@ -1456,15 +1506,16 @@ angular.module('askApp')
                  * yet mapped.
                  */
                 $scope.getRemainingActivities = function() {
-                    var selectedActivities = $scope.getAnswer($scope.question.slug);
-                    // Filter out activities that have already been mapped.
-                    var remainingActivities = _.difference(
-                        _.pluck(selectedActivities, 'text'),
-                        _.flatten(_.map($scope.locations, function(location) {
-                            return _.pluck(location.answers, 'text');
-                        })));
+                    return false;
+                    // var selectedActivities = $scope.getAnswer($scope.question.slug);
+                    // // Filter out activities that have already been mapped.
+                    // var remainingActivities = _.difference(
+                    //     _.pluck(selectedActivities, 'text'),
+                    //     _.flatten(_.map($scope.locations, function(location) {
+                    //         return _.pluck(location.answers, 'text');
+                    //     })));
 
-                    return angular.copy(remainingActivities);
+                    // return angular.copy(remainingActivities);
                 };
 
                 /**
@@ -1535,7 +1586,7 @@ angular.module('askApp')
                         return answer.text === row;
                     });
                     var isGroupName = _.string.startsWith(row, '*');
-                    if (isGroupName && row.substr(1) === "") {
+                    if (isGroupName && row.trim().substr(1) === "") {
                         nonVisibleGroupsIndex += 1;
                         nonVisibleGroups[nonVisibleGroupsIndex] = [];
                     } else {
@@ -1570,6 +1621,8 @@ angular.module('askApp')
                         $scope.question.groupedOptions = _.shuffle(_.toArray($scope.question.groupedOptions));
                     }
                     
+                } else if (nonVisibleGroupsIndex > -1) {
+                    $scope.question.options = _.flatten(_.toArray(nonVisibleGroups));
                 }
             }
             // grid question controller
@@ -1696,6 +1749,16 @@ angular.module('askApp')
                 }, true);
                 $scope.gridValidated = $scope.validateGrid($scope.question);
             }
+
+            // remove hoisted options from options list
+            if ($scope.question && $scope.question.hoisted_options && $scope.question.hoisted_options.length) {
+                _.each($scope.question.hoisted_options, function(option) {
+                    $scope.question.options = _.filter($scope.question.options, function(item) {
+                        return item.label !== option.label;
+                    });
+                });
+            }
+
 
         };
         $scope.viewPath = app.viewPath;

@@ -14,6 +14,8 @@ class RespondantAdmin(admin.ModelAdmin):
 class PageInline(admin.TabularInline):
     model = Page
 
+class PageAdmin(admin.ModelAdmin):
+    list_display = ('question', 'survey',)
 
 class SurveyAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug',)
