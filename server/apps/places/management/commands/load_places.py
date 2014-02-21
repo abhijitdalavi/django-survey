@@ -20,19 +20,24 @@ class Command(BaseCommand):
         for row in reader:
             #if rows > 1000:
             #    break
-            rows += 1
-            kwargs = {
-                'type': row['FEATURE_CLASS'].decode("utf-8").encode('utf8'),
-                'name': row['FEATURE_NAME'].decode("utf-8").encode('utf8'),
-                'state': row['STATE_ALPHA'].decode("utf-8").encode('utf8'),
-                'county': row['COUNTY_NAME'].decode("utf-8").encode('utf8'),
-                'lat': row['PRIM_LAT_DEC'].decode("utf-8").encode('utf8'),
-                'lng': row['PRIM_LONG_DEC'].decode("utf-8").encode('utf8')
-            }
+            try:
+                rows += 1
+                kwargs = {
+                    'type': row['FEATURE_CLASS'].decode("utf-8").encode('utf-8'),
+                    #'name': row['FEATURE_NAME'].decode("utf-8").encode('ascii', 'ignore'),
+                    'name': row['FEATURE_NAME'].decode("utf-8").encode('utf-8'),
+                    'state': row['STATE_ALPHA'].decode("utf-8").encode('utf-8'),
+                    'county': row['COUNTY_NAME'].decode("utf-8").encode('utf-8'),
+                    'lat': row['PRIM_LAT_DEC'].decode("utf-8").encode('utf-8'),
+                    'lng': row['PRIM_LONG_DEC'].decode("utf-8").encode('utf-8')
+                }
 
-            if kwargs['type'] not in excluded_types:
-                place, created = Place.objects.get_or_create(type=kwargs['type'], name=kwargs['name'], state=kwargs['state'], county=kwargs['county'])
-                place.lat = kwargs['lat']
-                place.lng = kwargs['lng']
-                place.save()
+                if kwargs['type'] not in excluded_types:
+                    place, created = Place.objects.get_or_create(type=kwargs['type'], name=kwargs['name'], state=kwargs['state'], county=kwargs['county'])
+                    place.lat = kwargs['lat']
+                    place.lng = kwargs['lng']
+                    place.save()
+            except:
+                import pdb
+                pdb.set_trace()
         print Place.objects.all().count()

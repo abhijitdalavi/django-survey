@@ -117,3 +117,7 @@ plugins/
 server/static/images/PS_CR_3mi_buffer.jpg
 
 server/static/images/PS_CR_counties.jpg
+
+server/apps/places/fixtures/wa.json
+
+server/apps/places/fixtures/wa.txt
