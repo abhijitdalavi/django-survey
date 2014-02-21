@@ -9,6 +9,56 @@
 a {
     text-decoration: none;
 }
+a.data-tooltip {
+    color: inherit;
+}
+a.data-tooltip[data-tooltip]:link, a[data-tooltip]:visited {
+    position: relative;
+    text-decoration: none;
+    border-bottom: solid 1px;
+}
+
+a.data-tooltip[data-tooltip]:before {
+    content: "";
+    position: absolute;
+    border-top: 20px solid #0090ff;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    visibility: hidden;
+    top: -18px;
+    left: -26px;
+}
+
+a.data-tooltip[data-tooltip]:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    color: #fff;
+    background: #ccc;
+    padding: 8px 12px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 4px;
+    white-space: inherit;
+    background-color: #5b9aa9;
+    border-color: black;
+    font-size: 18px;
+    visibility: hidden;
+    max-width: 400px;
+    z-index: 200;
+}
+
+a.data-tooltip[data-tooltip]:hover:before, a[data-tooltip]:hover:after {
+    visibility: visible;
+    -moz-transition: visibility 0s linear .3s;
+    -webkit-transition: visibility 0s linear .3s;
+    -ms-transition: visibility 0s linear .3s;
+    -o-transition: visibility 0s linear .3s;
+    transition: visibility 0s linear .3s;
+}
+.data-tooltip .icon-info-sign {
+    font-size: 16px;
+}
+
 [type=submit] {
     line-height: 30px;
 }
