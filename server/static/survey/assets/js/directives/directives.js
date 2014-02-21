@@ -126,7 +126,7 @@ angular.module('askApp')
                 preset: 'date',
                 mode: 'clickpick',
                 // theme: 'android-ics light',
-                dateFormat : "dd/mm/yy",
+                dateFormat : "mm/dd/yy",
                 onSelect: function (date) {
                      scope.$apply(function (s) {
                         s.answer = date;    

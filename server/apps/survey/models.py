@@ -452,7 +452,7 @@ class Response(caching.base.CachingMixin, models.Model):
             elif self.question.type in ('currency', 'integer', 'number'):
                 flat[self.question.slug] = str(self.answer_number)
             elif self.question.type == 'datepicker':
-                flat[self.question.slug] = self.answer_date.strftime('%d/%m/%Y')
+                flat[self.question.slug] = self.answer_date.strftime('%m/%d/%Y')
             elif self.question.type == 'grid':
                 for answer in self.gridanswer_set.all():
                     flat[self.question.slug + '-' + answer.row_label] = answer.answer_text
@@ -467,7 +467,7 @@ class Response(caching.base.CachingMixin, models.Model):
         if self.answer_raw:
             self.answer = simplejson.loads(self.answer_raw)
             if self.question.type in ['datepicker']:
-                self.answer_date = datetime.datetime.strptime(self.answer, '%d/%m/%Y')
+                self.answer_date = datetime.datetime.strptime(self.answer, '%m/%d/%Y')
             elif self.question.type in ['currency', 'integer', 'number']:
                 if isinstance(self.answer, (int, long, float, complex)):
                     self.answer_number = self.answer
