@@ -68,7 +68,7 @@ function ZoomToCtrl($scope, dialog, $http, $timeout, $location) {
                     $scope.showSpinner = false;
                     $scope.showNoResults = $scope.results.length == 0 && $scope.searchTerm && $scope.searchTerm.length > 0;
                 });
-                logger.logUsage('search-term-typed', $scope.searchTerm);
+                // logger.logUsage('search-term-typed', $scope.searchTerm);
             }, 1000);
         } else {
             $scope.results = [];
@@ -89,7 +89,11 @@ function ZoomToCtrl($scope, dialog, $http, $timeout, $location) {
 
     $scope.showMapUsage = function () {
         $scope.show('mapUsage');
-        logger.logUsage('map-usage-shown', '');
+        // logger.logUsage('map-usage-shown', '');
+    };
+    
+    $scope.setZoomToPlace = function (place) {
+        $scope.selectedPlace = place;
     };
 
     $scope.close = function() {
