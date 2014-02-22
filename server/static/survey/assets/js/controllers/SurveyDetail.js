@@ -624,6 +624,9 @@ angular.module('askApp')
                     _.each(question.options, function(option) {
                         option.checked = false;
                     });
+                    if (question.otherOption && question.otherOption.checked) {
+                        question.otherOption.checked = false;
+                    }
                     //$('#top-two-things').css('font-weight', 'bold');
                     $('#top-two-things').animate( { backgroundColor: "#ffffcc" }, 1 ).animate( { backgroundColor: "#C5E6EB" }, 1500 );
                     return false;
