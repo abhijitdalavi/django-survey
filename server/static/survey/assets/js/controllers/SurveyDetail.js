@@ -617,6 +617,21 @@ angular.module('askApp')
                 }
             }
 
+            if (question.slug === 'question-17') {
+                if (answers.length == 2) {
+                    return true;
+                } else if (answers.length > 2) {
+                    _.each(question.options, function(option) {
+                        option.checked = false;
+                    });
+                    //$('#top-two-things').css('font-weight', 'bold');
+                    $('#top-two-things').animate( { backgroundColor: "#ffffcc" }, 1 ).animate( { backgroundColor: "#C5E6EB" }, 1500 );
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+
             // enable/disable continue button
             return answers.length > 0 && isOtherAnswerValid;
         };
