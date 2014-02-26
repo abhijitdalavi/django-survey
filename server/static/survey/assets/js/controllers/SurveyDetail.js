@@ -886,6 +886,10 @@ angular.module('askApp')
                     gridValidated = true;
                 } else {
                     gridValidated = false;
+                    if (!_.contains(_.pluck($scope.question.options, 'numberoftrips'), undefined) && !_.contains(_.pluck($scope.question.options, 'numberoftrips'), null)) {
+                        //$('#top-two-things').css('font-weight', 'bold');
+                        $('#total-trips').animate( { backgroundColor: "#ffffcc" }, 1 ).animate( { backgroundColor: "#C5E6EB" }, 1500 );                    
+                    }
                 }
             }
             if ($scope.question.slug === 'question-5') {
@@ -898,7 +902,7 @@ angular.module('askApp')
                         gridValidated = false;
                     }
                 });
-                if (colSum > 0) {
+                if (colSum >= $scope.getAnswer('question-2b:outdoorrecreation')) {
                     gridValidated = true;
                 } 
             }
@@ -965,7 +969,7 @@ angular.module('askApp')
             }
 
             if ($scope.question && $scope.question.type === 'info' && $scope.question.info) {
-                // $scope.infoView = 'survey-pages/' + $routeParams.surveySlug + '/' + $scope.question.info + '.html';
+                $scope.infoView = 'survey-pages/' + $routeParams.surveySlug + '/' + $scope.question.info + '.html';
 
             }
 

@@ -23,7 +23,7 @@
         </div>
         <ul class="location-activities">
             <li ng-show="location.answers.length == 0" class="empty-text">No Activities</li>
-            <li ng-show="location.answers.length > 0" ng-repeat="answer in location.answers">{{ answer.text }}</li>
+            <li ng-show="location.answers.length > 0" ng-repeat="answer in location.answers[0]">{{ answer.text }}</li>
         </ul>
     </div>
 

@@ -128,7 +128,7 @@ p.landing, p.info {
 }
 .question-title {
     font-size: 20px;
-    font-weight: 500 !important;
+    /*font-weight: 500 !important;*/
     line-height: 26px;
     margin-bottom: 25px;
 }
