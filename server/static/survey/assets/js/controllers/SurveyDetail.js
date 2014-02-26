@@ -462,6 +462,10 @@ angular.module('askApp')
         $scope.skipIf = function(nextQuestion) {
             var keep = true;
 
+            if (_.str.include(nextQuestion.slug, 'modal')) {
+                return true;
+            }
+
             if (nextQuestion.blocks && nextQuestion.blocks.length) {
                 var blocks = nextQuestion.blocks;
             } else if (nextQuestion.skip_question && nextQuestion.skip_condition) {
