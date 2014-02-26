@@ -70,7 +70,7 @@ angular.module('askApp')
                 // L.control.layers(baseMaps, null, options).addTo(map);
 
                 // Study area boundary                
-                $http.get("/static/survey/data/marco_dd.json").success(function(data) {
+                $http.get("/static/survey/data/puget_sound.json").success(function(data) {
                     var boundaryStyle = {
                         "color": "#E6D845",
                         "weight": 3,

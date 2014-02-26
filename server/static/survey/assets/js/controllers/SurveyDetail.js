@@ -1385,9 +1385,11 @@ angular.module('askApp')
 
 
                 // TODO: Make this load in from a field or something
-                //$http.get("data/marco_dd.json").success(function(data) {
-                //    $scope.boundaryLayer = L.geoJson(data);
-                //});
+                $http.get("/static/survey/data/puget_sound.json").success(function(data) {
+                   $scope.boundaryLayer = L.geoJson(data);
+                }).error(function(data) {
+                    debugger;
+                });
 
                 $scope.isOutOfBounds = function() {
                     var point, results;

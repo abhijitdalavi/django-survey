@@ -129,3 +129,21 @@ server/static/images/PS_CR_3mi_buffer_resize_orig.jpg
 server/static/images/PS_CR_counties-2.jpg
 
 server/static/images/PS_CR_counties_resize_orig.jpg
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.dbf
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.prj
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.sbn
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.sbx
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.shp
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.shp.xml
+
+server/static/images/shapefiles/PS_coastrec_3_mile_final.shx
+
+server/static/survey/data/puget_sound.geojson
+
+server/static/images/shapefiles/study_region.geojson
