@@ -121,3 +121,11 @@ server/static/images/PS_CR_counties.jpg
 server/apps/places/fixtures/wa.json
 
 server/apps/places/fixtures/wa.txt
+
+server/static/images/PS_CR_3mi_buffer-2.jpg
+
+server/static/images/PS_CR_3mi_buffer_resize_orig.jpg
+
+server/static/images/PS_CR_counties-2.jpg
+
+server/static/images/PS_CR_counties_resize_orig.jpg
