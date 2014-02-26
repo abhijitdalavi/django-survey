@@ -6,9 +6,11 @@
         <div id="question_bg" class="respondant" ng-class="{mapRespondant: question.type == 'map-multipoint'}">
             <i ng-show="loading" style="margin: 0 auto;" class="icon-spinner icon-spin"></i>
             <div ng-hide="question.type == 'map-multipoint'" class="row row-progress-bar" style="height:12px !important;">
-                <div class="offset9 col-md-3" style="height:12px !important; line-height: 5px;">
+                <div class="offset8 col-md-4" style="height:12px !important; line-height: 5px;">
                     <div ng-hide="showProgressBar" class="progress">
-                      <div class="progress-bar" style="width: {{ ((survey.questions.indexOf(question) + 1) / survey.questions.length) * 100 }}%;"></div>
+                      <!-- <div class="progress-bar" style="width: {{ ((survey.questions.indexOf(question) + 1) / survey.questions.length) * 100 }}%;"></div> -->
+                      <!-- <div class="bar noTransition" style="width: 50%;"></div> -->
+                      <div class="bar noTransition" style="width: {{ ((survey.questions.indexOf(question) + 1) / survey.questions.length) * 100 }}%;"></div>
                     </div>
                 </div>
             </div>
