@@ -1,6 +1,6 @@
 <div ng-show="panes.confirmPane.showing">
     <div class="modal-body">
-        <i class="pull-left icon-map-marker icon-3x col-icon" style="color: { activeMarker.color }"></i>
+        <i class="pull-left icon-map-marker icon-3x col-icon" style="color: { activeMarker.color }; margin-top: 10px; margin-right: 15px;"></i>
         <h2 class="question-title col-p">Is the placement of this activity marker correct?</h2>
     </div>
     <div class="modal-footer">
@@ -14,15 +14,15 @@
     <div class="modal-header">
         <h2 class="question-title">{{ question.title }}</h2>
     </div>
-    <div class="modal-body">
+    <div class="modal-body padded-form">
         <div ng-init="dialog=$parent.dialog;" ng-include="'/static/survey/views/questionTypes.html'"></div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-danger btn-large" ng-click="$parent.show('deleteConfirmationPane')">Remove Location</button>
 
-        <span ng-switch on="isAnswerValid">
-            <button ng-switch-when="true" class="btn btn-large save btn-primary" ng-click="answerMultiSelect(question)">Save</button>
-            <button ng-switch-default class="btn btn-large save disabled" disabled>Save</button>
+        <span>
+            <button ng-show="isAnswerValid" class="btn btn-large save btn-primary" ng-click="answerMultiSelect(question)">Next</button>
+            <button ng-hide="isAnswerValid" style="margin-left: 0px" class="btn btn-large save disabled" disabled>Next</button>
         </span>
     </div>
 </div>

@@ -363,7 +363,7 @@ angular.module('askApp')
                             data: templateData,
                             marker: marker
                         };
-                        scope.popupText = templateData[scope.popupField];
+                        scope.popupText = templateData[scope.popupField][0];
                         marker.openPopup();
                         $compile(angular.element(map._popup._contentNode))(scope);
                     };

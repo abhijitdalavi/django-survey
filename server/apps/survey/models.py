@@ -497,25 +497,25 @@ class Response(caching.base.CachingMixin, models.Model):
                 answers = []
                 self.location_set.all().delete()
                 for point in simplejson.loads(simplejson.loads(self.answer_raw)):
-                        answers.append("%s,%s: %s" % (point['lat'], point['lng'], point['answers']))
-                        location = Location(lat=Decimal(str(point['lat'])), lng=Decimal(str(point['lng'])), response=self, respondant=self.respondant)
-                        location.save()
-                        for answer in point['answers']:
-                            answer = LocationAnswer(answer=answer['text'], label=answer['label'], location=location)
-                            answer.save()
-                        location.save()
+                    answers.append("%s,%s: %s" % (point['lat'], point['lng'], point['answers']))
+                    location = Location(lat=Decimal(str(point['lat'])), lng=Decimal(str(point['lng'])), response=self, respondant=self.respondant)
+                    location.save()
+                    for answer in point['answers']:
+                        answer = LocationAnswer(answer=answer[0]['text'], label=answer[0]['label'], location=location)
+                        answer.save()
+                    location.save()
                 self.answer = ", ".join(answers)
             elif self.question.type in ['pennies'] and self.id:
                 answers = []
                 self.location_set.all().delete()
                 for point in simplejson.loads(simplejson.loads(self.answer_raw)):
-                        answers.append("%s,%s: %s" % (point['lat'], point['lng'], point['answers']))
-                        location = Location(lat=Decimal(str(point['lat'])), lng=Decimal(str(point['lng'])), response=self, respondant=self.respondant)
-                        location.save()
-                        for answer in point['answers']:
-                            answer = LocationAnswer(answer=answer['text'], label=answer['label'], location=location)
-                            answer.save()
-                        location.save()
+                    answers.append("%s,%s: %s" % (point['lat'], point['lng'], point['answers']))
+                    location = Location(lat=Decimal(str(point['lat'])), lng=Decimal(str(point['lng'])), response=self, respondant=self.respondant)
+                    location.save()
+                    for answer in point['answers']:
+                        answer = LocationAnswer(answer=answer[0]['text'], label=answer[0]['label'], location=location)
+                        answer.save()
+                    location.save()
                 self.answer = ", ".join(answers)
             elif self.question.type == 'grid':
                 self.gridanswer_set.all().delete()

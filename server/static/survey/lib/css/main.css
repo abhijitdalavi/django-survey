@@ -59,6 +59,10 @@ a.data-tooltip[data-tooltip]:hover:before, a[data-tooltip]:hover:after {
     font-size: 16px;
 }
 
+.padded-form form {
+    padding: 5px 15px;
+}
+
 [type=submit] {
     line-height: 30px;
 }
@@ -403,6 +407,7 @@ input.datepicker {
 }
 #question_bg {
     background-color: #C5E6EB;
+    min-height: 50px;
 }
 #survey_container:after {
     content: ' ';
@@ -419,6 +424,10 @@ input.datepicker {
 #question_bg button:disabled, #question_bg button.disabled {
     background-color: #DDD;
     color: #666;
+}
+#question_bg .btn.disabled, .btn[disabled] {
+    background-color: #95a5a6;
+    color: white;
 }
 #question_bg input {
     border-radius: 0px;

@@ -12,6 +12,7 @@
             <input
                 name="integerAnswer"
                 ng-model="answer"
+                ng-change="isNumberValid(answer)"
                 class="no_pad form-control input-block-level"
                 placeholder="{{ question.label }}"
                 type="number"
@@ -29,6 +30,7 @@
             <input
                 name="integerAnswer"
                 ng-model="answer"
+                ng-change="isNumberValid(answer)"
                 class="no_pad form-control input-block-level"
                 placeholder="{{ question.label }}"
                 type="number"
@@ -38,7 +40,7 @@
                 ui-event="{ keypress : 'onlyDigits($event)' }"
                 autofocus
                 required/>
-            <button type="submit" class="btn btn-primary  btn-block btn-continue" ng-disabled="question.required && ! answer && answer != 0">continue</button>
+            <button type="submit" class="btn btn-primary  btn-block btn-continue" ng-hide="dialog" ng-disabled="question.required && ! answer && answer != 0">continue</button>
         </form>
     </div>
     <div ng-switch-when="auto-single-select">
@@ -161,7 +163,7 @@
         <form class="question" ng-submit="answerMultiSelect(question)">
             <div class="mrm">
                 <div ng-show="question.hoisted_options.length" ng-cloak class="hoisted-activities">
-                    <h3>Primary Activity</h3>
+                    <h3>Primary Activities</h3>
                     <ul class="nav nav-pills nav-stacked hoisted">
                         <li
                           ng-tap="$parent.onMultiSelectClicked(option, $parent.question)"
