@@ -140,6 +140,12 @@ p.landing, p.info {
     font-weight: bold;
     margin-top: 10px;
 }
+.modal-body form {
+  margin-bottom: 0px;
+}
+.modal-body textarea {
+  margin-bottom: 0px;
+}
 .inset-info-section {
     margin-bottom: 40px;
     margin-left: 40px;

@@ -1,29 +1,15 @@
 
-<div ng-show="panes.howManyHoursPane.showing" ng-controller="SurveyDetailCtrl">
+<div ng-show="panes.whyQualityPane.showing" ng-controller="SurveyDetailCtrl">
     <div class="modal-header">
-        <h2 class="question-title">{{ question.title }}</h2>
+        <h2 class="question-title" ng-bind-html-unsafe="question.title"></h2>
     </div>
     <div class="modal-body padded-form">
         <div ng-init="dialog=$parent.dialog;">
-
-        
+            
             <form class="question" ng-show="survey.questions.length" ng-submit="answerQuestion(answer)">
-                <input
-                    name="integerAnswer"
-                    ng-model="answer"
-                    ng-change="isNumberValid(answer)"
-                    class="no_pad form-control input-block-level"
-                    placeholder="{{ question.label }}"
-                    type="number"
-                    min="{{question.integer_min}}"
-                    max="{{question.integer_max}}"
-                    step="any"
-                    ui-event="{ keypress : 'onlyDigits($event)' }"
-                    autofocus
-                    required/>
-                <button type="submit" class="btn btn-primary btn-block btn-continue" ng-hide="dialog" ng-disabled="question.required && ! answer && answer != 0">continue</button>
+                <textarea rows="5" placeholder="{{ question.label }}" ng-model="answer"></textarea>
+                <button type="submit" class="btn btn-primary btn-block btn-continue" ng-hide="dialog" ng-disabled="question.required && !answer">continue</button>
             </form>
-
 
         </div>
     </div>

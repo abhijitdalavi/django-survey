@@ -40,7 +40,7 @@
                 ui-event="{ keypress : 'onlyDigits($event)' }"
                 autofocus
                 required/>
-            <button type="submit" class="btn btn-primary  btn-block btn-continue" ng-hide="dialog" ng-disabled="question.required && ! answer && answer != 0">continue</button>
+            <button type="submit" class="btn btn-primary btn-block btn-continue" ng-hide="dialog" ng-disabled="question.required && ! answer && answer != 0">continue</button>
         </form>
     </div>
     <div ng-switch-when="auto-single-select">
@@ -61,7 +61,7 @@
                 <option selected value="other">Other</option>
             </select>
             <input class="form-control input-block-level" type="text" placeholder="{{ question.label }}" ng-show="answer == 'other'" ng-model="otherAnswer" autofocus/>   
-            <button type="submit" class="btn btn-primary  btn-block btn-continue">continue</button>
+            <button type="submit" class="btn btn-primary btn-block btn-continue">continue</button>
         </form>
     </div>
     <div ng-switch-when="text">
@@ -119,7 +119,7 @@
     <div ng-switch-when="textarea">
         <form class="question" ng-show="survey.questions.length" ng-submit="answerQuestion(answer)">
             <textarea rows="5" placeholder="{{ question.label }}" ng-model="answer"></textarea>
-            <button type="submit" class="btn btn-primary btn-block btn-continue" ng-disabled="question.required && !answer">continue</button>
+            <button type="submit" class="btn btn-primary btn-block btn-continue" ng-hide="dialog" ng-disabled="question.required && !answer">continue</button>
         </form>
     </div>
     <div ng-switch-when="single-select">
@@ -141,7 +141,7 @@
                 </ul>
             </div>
             <input class="form-control input-block-level" type="text" placeholder="Other Option" ng-show="question.otherOption.checked" ng-model="question.otherAnswer" autofocus/>             
-            <button type="submit" class="btn  btn-block btn-continue" ng-class="{'btn-primary': isAnswerValid, disabled: !isAnswerValid }">continue</button>
+            <button type="submit" class="btn btn-block btn-continue" ng-hide="dialog" ng-class="{'btn-primary': isAnswerValid, disabled: !isAnswerValid }">continue</button>
         </form>
     </div>
     <div ng-switch-when="yes-no">
