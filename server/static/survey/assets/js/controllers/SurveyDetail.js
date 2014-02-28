@@ -2413,7 +2413,7 @@ angular.module('askApp')
                 app.offline = false;
 
                 $http.get(app.server + '/respond/' + $routeParams.surveySlug + '?get-uid=true').success(function(data) {
-                    $location.path(['survey', $routeParams.surveySlug, 'first', data.uuid].join('/'));
+                    $location.path(['survey', $routeParams.surveySlug, data.uuid].join('/'));
                 }).error(function(data, status, headers, config) {
                     $scope.survey.status = 'invalid';
                 });

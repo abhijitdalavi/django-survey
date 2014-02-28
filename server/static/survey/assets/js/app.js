@@ -49,7 +49,8 @@ angular.module('askApp', ['ui', 'ui.bootstrap', 'ngGrid'])
         controller: 'CompleteCtrl'
     })
         .when('/survey/:surveySlug/:uuidSlug', {
-        templateUrl: app.viewPath + 'views/landing.html',
+        // templateUrl: app.viewPath + 'views/landing.html',
+        templateUrl: app.viewPath + 'survey-pages/puget-sound-coastal-recreation-survey/landing.html',
         controller: 'SurveyDetailCtrl'
     })
         .when('/survey/:surveySlug/:questionSlug/:uuidSlug/:action', {
