@@ -80,18 +80,29 @@ def complete(request, survey_slug, uuid, action=None, question_slug=None):
     if request.method == 'POST':
         survey = get_object_or_404(Survey, slug=survey_slug)
         respondant = get_object_or_404(Respondant, uuid=uuid, survey=survey)
+        redirectURL = respondant.gfk_returnURL
+        qstatus = None
         print action, question_slug
 
         if action is None and question_slug is None:
             respondant.complete = True
             respondant.status = 'complete'
+            qstatus = '_QSTATUS=1'
         elif action == 'terminate' and question_slug is not None:
             respondant.complete = False
             respondant.status = 'terminate'
             respondant.last_question = question_slug
+            qstatus = '_QSTATUS=2'
         respondant.save()
-        return HttpResponse(simplejson.dumps({'success': True}))
-    return HttpResponse(simplejson.dumps({'success': False}))
+
+        if redirectURL is not None and qstatus is not None:
+            if redirectURL.find('?') == -1:
+                return redirect("%s?%s" %(redirectURL, qstatus))
+            else:
+                return redirect("%s&%s" %(redirectURL, qstatus))
+
+        return HttpResponse(simplejson.dumps({'success': True, 'GfK_redirect': False}))
+    return HttpResponse(simplejson.dumps({'success': False, 'GfK_redirect': False}))
 
 
 def send_email(email, uuid):
