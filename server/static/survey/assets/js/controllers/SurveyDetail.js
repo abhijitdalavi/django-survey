@@ -1402,8 +1402,9 @@ angular.module('askApp')
             if ($scope.question && ($scope.question.type === 'pennies' || $scope.question.slug === 'pennies-intro')) {
                 //debugger;
                 if ($scope.question.options_from_previous_answer) {
-                    // $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[0]);
-                    $scope.primaryActivity = $scope.question.hoisted_options[0];
+                    $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[1]);
+                    // $scope.primaryActivity = $scope.question.hoisted_options[0];
+
                     $scope.locations = _.filter(JSON.parse($scope.getAnswer($scope.question.options_from_previous_answer.split(',')[0])), function(location) {
                         return _.some(location.answers[0], function(item) {
                             return item.label === $scope.primaryActivity.label;
@@ -1411,7 +1412,7 @@ angular.module('askApp')
                     });
                 }
 
-                if ($scope.locations.length === 1) {
+                if ($scope.locations && $scope.locations.length === 1) {
                     // One location with primary activity. 
                     // Auto-answer with all pennies go to the one location.
                     $scope.locations.pennies = 100;
@@ -2285,7 +2286,7 @@ angular.module('askApp')
             }
 
             // remove hoisted options from options list
-            if ($scope.question && $scope.question.hoisted_options && $scope.question.hoisted_options.length) {
+            if ($scope.question && $scope.question.options && $scope.question.options.length && $scope.question.hoisted_options && $scope.question.hoisted_options.length) {
                 _.each($scope.question.hoisted_options, function(option) {
                     $scope.question.options = _.filter($scope.question.options, function(item) {
                         return item.label !== option.label;
