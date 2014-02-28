@@ -147,3 +147,5 @@ server/static/images/shapefiles/PS_coastrec_3_mile_final.shx
 server/static/survey/data/puget_sound.geojson
 
 server/static/images/shapefiles/study_region.geojson
+
+server/kn_test.html
