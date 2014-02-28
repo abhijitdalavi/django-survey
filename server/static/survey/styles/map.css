@@ -73,11 +73,8 @@
 }
 #map-search-control-group .icon-search {
     position: absolute;
-    top: 20px;
+    top: 22px;
     left: 10px;
-}
-.icon-search {
-    margin-top: 5px;    
 }
 #search-query-facade {
     border: 2px solid #dce4ec;
@@ -510,7 +507,7 @@ div[zoomto] .small-screen {
 .modal-zoomto .icon-search, .modal-zoomto .icon-spinner {
     position: absolute;
     left: -10px;
-    top: 10px;
+    top: 8px;
 }
 .modal-zoomto input.search-query {
     height: 24px !important; 

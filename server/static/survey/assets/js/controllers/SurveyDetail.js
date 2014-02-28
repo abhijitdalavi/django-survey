@@ -2294,7 +2294,7 @@ angular.module('askApp')
                 });
             }
 
-            if ($scope.question.slug === 'mapping-modal-1') {
+            if ($scope.question && $scope.question.slug === 'mapping-modal-1') {
                 if ($scope.$parent.activeMarker.answers && $scope.$parent.activeMarker.answers.length) { // editing Location
                     if ($scope.question.hoisted_options && $scope.question.hoisted_options.length) {
                         _.each($scope.question.hoisted_options, function(option) {
@@ -2311,11 +2311,11 @@ angular.module('askApp')
                         });
                     }
                 }                
-            } else if ($scope.question.slug === 'mapping-modal-2') {
+            } else if ($scope.question && $scope.question.slug === 'mapping-modal-2') {
                 if ($scope.$parent.activeMarker.answers.length > 1) {
                     $scope.answer = $scope.$parent.activeMarker.answers[1];
                 }
-            } else if ($scope.question.slug === 'mapping-modal-3') {
+            } else if ($scope.question && $scope.question.slug === 'mapping-modal-3') {
                 if ($scope.$parent.activeMarker.answers.length > 2) { // editing location
                     if ($scope.question.hoisted_options && $scope.question.hoisted_options.length) {
                         _.each($scope.question.hoisted_options, function(option) {
@@ -2332,7 +2332,7 @@ angular.module('askApp')
                         });
                     }
                 }      
-            } else if ($scope.question.slug === 'mapping-modal-4') {
+            } else if ($scope.question && $scope.question.slug === 'mapping-modal-4') {
                 if ($scope.$parent.activeMarker.answers.length > 3) { // editing location
                     if ($scope.question.options && $scope.question.options.length) {
                         _.each($scope.question.options, function(option) {
@@ -2342,11 +2342,11 @@ angular.module('askApp')
                         });
                     }
                 }
-            } else if ($scope.question.slug === 'mapping-modal-5') {
+            } else if ($scope.question && $scope.question.slug === 'mapping-modal-5') {
                 if ($scope.$parent.activeMarker.answers.length > 4) { // editing location
                     $scope.answer = $scope.$parent.activeMarker.answers[4];
                 }
-            } else if ($scope.question.slug === 'mapping-modal-6') {
+            } else if ($scope.question && $scope.question.slug === 'mapping-modal-6') {
                 if ($scope.$parent.activeMarker.answers.length > 5) { // editing location
                     if ($scope.question.options && $scope.question.options.length) {
                         _.each($scope.question.options, function(option) {
