@@ -36,6 +36,7 @@ class Respondant(caching.base.CachingMixin, models.Model):
     uuid = models.CharField(max_length=36, primary_key=True, default=make_uuid, editable=False)
     survey = models.ForeignKey('Survey')
     # responses = models.ManyToManyField('Response', related_name='responses', null=True, blank=True)
+    gfk_returnURL = models.URLField(max_length=500, default=None, null=True, blank=True)
     complete = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=STATE_CHOICES, default=None, null=True, blank=True)
     review_status = models.CharField(max_length=20, choices=REVIEW_STATE_CHOICES, default=REVIEW_STATE_NEEDED)

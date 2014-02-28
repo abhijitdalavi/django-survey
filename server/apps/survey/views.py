@@ -23,7 +23,13 @@ def delete_responses(request, uuid, template='survey/delete.html'):
 
 
 def survey(request, survey_slug=None, template='survey/survey.html'):
-    if survey_slug is not None:
+    if request.GET.get('id', None) is not None and request.GET.get('return', None) is not None:
+        survey = get_object_or_404(Survey, slug='puget-sound-coastal-recreation-survey', anon=True)
+        respondant, created = Respondant.objects.get_or_create(survey=survey, uuid=request.GET.get('id'))
+        respondant.gfk_returnURL = request.GET.get('return')
+        respondant.save()
+        return redirect("/respond#/survey/puget-sound-coastal-recreation-survey/first/%s" % (respondant.uuid))
+    elif survey_slug is not None:
         survey = get_object_or_404(Survey, slug=survey_slug, anon=True)
         respondant = Respondant(survey=survey, surveyor=request.user)
         respondant.save()
