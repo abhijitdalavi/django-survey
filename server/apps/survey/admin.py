@@ -9,7 +9,7 @@ class ResponseAdmin(admin.ModelAdmin):
 class RespondantAdmin(admin.ModelAdmin):
     readonly_fields = ('uuid',)
     list_display = ('uuid', 'ts', 'complete',)
-
+    ordering = ('-ts',)
 
 class PageInline(admin.TabularInline):
     model = Page
