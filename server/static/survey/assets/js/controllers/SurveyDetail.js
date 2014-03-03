@@ -2151,9 +2151,10 @@ angular.module('askApp')
                 if ($scope.question.randomize_groups) {
                     if (nonVisibleGroupsIndex > -1) {
                         $scope.question.options = _.flatten(_.shuffle(_.toArray(nonVisibleGroups)));
-                    } else {
-                        // NOTE:  the following has not been verified!!!
+                    } else if ($scope.question.groupedOptions && $scope.question.groupedOptions.length) {
                         $scope.question.groupedOptions = _.shuffle(_.toArray($scope.question.groupedOptions));
+                    } else { // no groups present -- randomize the list of options instead
+                        $scope.question.options = _.shuffle(_.toArray($scope.question.options));
                     }
                     
                 } else if (nonVisibleGroupsIndex > -1) {
