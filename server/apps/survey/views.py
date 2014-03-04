@@ -31,7 +31,7 @@ def survey(request, survey_slug=None, template='survey/survey.html'):
         return redirect("/respond#/survey/puget-sound-coastal-recreation-survey/%s" % (respondant.uuid))
     elif survey_slug is not None:
         survey = get_object_or_404(Survey, slug=survey_slug, anon=True)
-        respondant = Respondant(survey=survey, surveyor=request.user)
+        respondant = Respondant(survey=survey)
         respondant.save()
         if request.GET.get('get-uid', None) is not None:
             return HttpResponse(simplejson.dumps({'success': "true", "uuid": respondant.uuid}))
@@ -62,8 +62,8 @@ def answer(request, survey_slug, question_slug, uuid):
         if respondant.complete is True and not request.user.is_staff:
             return HttpResponse(simplejson.dumps({'success': False, 'complete': True}))
 
-        if request.user and not respondant.surveyor:
-            respondant.surveyor = request.user
+        # if request.user and not respondant.surveyor:
+        #     respondant.surveyor = request.user
         respondant.last_question = question_slug
         respondant.save()
 

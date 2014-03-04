@@ -2,7 +2,8 @@ from django.conf.urls import url
 
 from tastypie import fields
 from tastypie.authorization import Authorization
-from tastypie.authentication import SessionAuthentication, ApiKeyAuthentication, MultiAuthentication
+from tastypie.authentication import SessionAuthentication, ApiKeyAuthentication, MultiAuthentication, Authentication
+from tastypie.exceptions import Unauthorized
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 
 from survey.models import (Survey, Question, Option, Respondant, Response,
@@ -29,26 +30,45 @@ class SurveyModelResource(ModelResource):
 class StaffUserOnlyAuthorization(Authorization):
 
     def update_list(self, object_list, bundle):
-        return bundle.request.user.is_staff
+        if bundle.request.user.is_staff:
+            return object_list
+        raise Unauthorized("Sorry, no updating.")
 
     def update_detail(self, object_list, bundle):
         return bundle.request.user.is_staff
 
     def delete_list(self, object_list, bundle):
-        # Sorry user, no deletes for you!
-        return bundle.request.user.is_staff
+        if bundle.request.user.is_staff:
+            return object_list
+        raise Unauthorized("Sorry, no deletes for you.")
 
     def delete_detail(self, object_list, bundle):
+        return bundle.request.user.is_staff
+
+    def read_list(self, object_list, bundle):
+        if bundle.request.user.is_staff:
+            return object_list
+        raise Unauthorized("Sorry, no reading.")
+    
+    # read_detail is available for non-staff
+
+    def create_list(self, object_list, bundle):
+        if bundle.request.user.is_staff:
+            return object_list
+        raise Unauthorized("Sorry, no creating.")
+
+    def create_detail(self, object_list, bundle):
         return bundle.request.user.is_staff
 
 
 class AuthSurveyModelResource(SurveyModelResource):
     class Meta:
         authorization = StaffUserOnlyAuthorization()
-        authentication = MultiAuthentication(ApiKeyAuthentication(), SessionAuthentication())
+        # authentication = MultiAuthentication(ApiKeyAuthentication(), SessionAuthentication())
+        authentication = Authentication()
 
 
-class ResponseResource(SurveyModelResource):
+class ResponseResource(AuthSurveyModelResource):
     question = fields.ToOneField('apps.survey.api.QuestionResource', 'question', full=True)
     answer_count = fields.IntegerField(readonly=True)
 
