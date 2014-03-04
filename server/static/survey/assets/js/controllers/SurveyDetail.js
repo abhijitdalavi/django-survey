@@ -435,7 +435,8 @@ angular.module('askApp')
 
         $scope.getNextQuestionPath = function(numQsToSkips) {
             var nextQuestion = $scope.getNextQuestion(numQsToSkips);
-
+            $scope.loading = false;
+            
             if (nextQuestion) {
                 return ['survey', $scope.survey.slug, nextQuestion, $routeParams.uuidSlug, $routeParams.action].join('/');
             } else {
@@ -2276,7 +2277,7 @@ angular.module('askApp')
             // }
 
             $scope.nextQuestionPath = $scope.getNextQuestionPath();
-            $scope.loading = false;
+            // $scope.loading = false;
             $scope.gridValidated = false;
             if ($scope.question && $scope.question.type === 'grid') {
                 // validate grid questions
