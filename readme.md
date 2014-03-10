@@ -14,6 +14,7 @@ cd into the source directory with your terminal
 ## Vagrant
 ```bash
 vagrant plugin install vagrant-omnibus # for chef
+vagrant plugin install vagrant-vbguest
 vagrant up
 easy_install pip #(if you do not already have)
 pip install fabric #(if you do not already have)
