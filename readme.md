@@ -152,3 +152,17 @@ heroku pg:info
 heroku pgbackups:restore DATABASE_URL 'http://www.example.org/latest.dump'
 ```
 
+
+## Troubleshooting
+
+### 3/10/2014
+Running this on a Mac upgraded to Mavericks runs into some problems. Bascially you need to rebuilt easy_install using the correct version of python (2.7). See here. 
+```
+wget https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py
+sudo PATH_TO_PYTHON/python ez_setup.py
+sudo easy_install -U pip
+```
+
+
+
+
