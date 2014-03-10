@@ -357,6 +357,10 @@ link "/usr/venv" do
   to "/usr/local/venv"
 end
 
+link "/usr/bin/pg_config" do
+  to "/usr/pgsql-9.1/bin/pg_config"
+end
+
 link "/usr/include/Python.h" do
     to "/usr/include/python2.6/Python.h"
 end
