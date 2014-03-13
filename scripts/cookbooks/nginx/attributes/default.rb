@@ -9,7 +9,7 @@ when "debian","ubuntu"
 else
   set[:nginx][:dir]     = "/etc/nginx"
   set[:nginx][:log_dir] = "/var/log/nginx"
-  set[:nginx][:user]    = "nginx"
+  set[:nginx][:user]    = "www-data"
   set[:nginx][:binary]  = "/usr/sbin/nginx"
 end
 
