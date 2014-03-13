@@ -17,6 +17,9 @@ develop-eggs
 .installed.cfg
 lib64
 
+#Backups directory
+backups/
+
 # Installer logs
 pip-log.txt
 

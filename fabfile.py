@@ -396,14 +396,17 @@ def migrate_db():
 def backup_db():
     date = datetime.datetime.now().strftime("%Y-%m-%d%H%M")
     dump_name = "%s-geosurvey.dump" % date
-    run("pg_dump geosurvey -n public -c -f /tmp/%s -Fc -O -no-acl -U postgres" % dump_name)
+    #run("pg_dump geosurvey -n public -c -f /tmp/%s -Fc -O -no-acl -U postgres" % dump_name)
+    run("pg_dump puget-sound -n public -p 5433 -c -f /tmp/%s -Fc -O -no-acl" % dump_name)
     get("/tmp/%s" % dump_name, "backups/%s" % dump_name)
 
 
 @task
 def restore_db(dump_name):
     put(dump_name, "/tmp/%s" % dump_name.split('/')[-1])
+    #run("pg_restore --verbose --clean --no-acl --no-owner -U postgres -d geosurvey /tmp/%s" % dump_name.split('/')[-1])
     run("pg_restore --verbose --clean --no-acl --no-owner -U postgres -d geosurvey /tmp/%s" % dump_name.split('/')[-1])
+    
     #run("cd %s && %s/bin/python manage.py migrate --settings=config.environments.staging" % (env.app_dir, env.venv))
 
 
