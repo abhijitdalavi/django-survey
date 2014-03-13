@@ -1,5 +1,5 @@
 export EDITOR=vim
-export PATH=/usr/pgsql-9.1/bin:$PATH
+
 function psg {
     ps auxww | grep --color=always $* | grep -v grep | sed -e 's/  */ /g' | cut -d' ' -f 2,11-
 }
@@ -31,4 +31,4 @@ function dbreset {
     python $MANAGEPY migrate --settings=example.settings_server
 }
 
-cd $APPS/<%= node[:project] %>/ && source $VBIN/activate
+cd /vagrant && source $VBIN/activate

@@ -397,17 +397,22 @@ def backup_db():
     date = datetime.datetime.now().strftime("%Y-%m-%d%H%M")
     dump_name = "%s-geosurvey.dump" % date
     #run("pg_dump geosurvey -n public -c -f /tmp/%s -Fc -O -no-acl -U postgres" % dump_name)
-    run("pg_dump puget-sound -n public -p 5433 -c -f /tmp/%s -Fc -O -no-acl" % dump_name)
+    run("/usr/lib/postgresql/9.1/bin/pg_dump puget-sound -n public -p 5433 -c -f /tmp/%s -Fc -O -no-acl" % dump_name)
     get("/tmp/%s" % dump_name, "backups/%s" % dump_name)
 
 
 @task
 def restore_db(dump_name):
+    env.warn_only = True
     put(dump_name, "/tmp/%s" % dump_name.split('/')[-1])
-    #run("pg_restore --verbose --clean --no-acl --no-owner -U postgres -d geosurvey /tmp/%s" % dump_name.split('/')[-1])
-    run("pg_restore --verbose --clean --no-acl --no-owner -U postgres -d geosurvey /tmp/%s" % dump_name.split('/')[-1])
-    
-    #run("cd %s && %s/bin/python manage.py migrate --settings=config.environments.staging" % (env.app_dir, env.venv))
+    run("dropdb geosurvey")
+    run("createdb -U postgres -T template0 -O postgres geosurvey -E UTF8 --locale=en_US.UTF-8")
+    with cd(env.code_dir):
+        with _virtualenv():
+            #_manage_py('flush --noinput')
+            # _manage_py('syncdb --noinput')
+            run("pg_restore --create --no-acl --no-owner -U postgres -d geosurvey /tmp/%s" % dump_name.split('/')[-1])
+            _manage_py('migrate')
 
 
 @task
@@ -415,6 +420,7 @@ def package_android_dev():
         run("cd %s && %s/bin/python manage.py package http://demo.pointnineseven.com '../mobile/www'" % (env.app_dir, env.venv))
         local("cd mobile && /usr/local/share/npm/bin/phonegap build -V android")
         local("scp ./mobile/platforms/android/bin/HapiFisDev-debug.apk demo.pointnineseven.com:/srv/downloads/demo-dev.apk")
+
 
 @task
 def package_android_prod():
