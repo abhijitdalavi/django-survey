@@ -434,7 +434,7 @@ input.datepicker {
 }
 #question_bg input {
     border-radius: 0px;
-    float: right;
+/*    float: right; */
     margin-bottom: 1em;
     list-style-type: none;
     padding: 22px;
