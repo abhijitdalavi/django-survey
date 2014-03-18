@@ -31,11 +31,12 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}survey/styles/map.css?v=0">    
     <link rel="stylesheet" href="{{ STATIC_URL }}survey/assets/lib/css/mobiscroll-2.0.full.min.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}survey/lib/css/main.css">
-
+    
+     
     <!--[if lt IE 9]>
      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
+    <script src="{{ STATIC_URL }}javascripts/libs/modernizr-2.0.6.js"></script>
     <!--[if lt IE 8]>
       <link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome-ie7.min.css" rel="stylesheet">
       <link rel="stylesheet" href="{{ STATIC_URL }}survey/styles/main.ie7.css">
@@ -45,7 +46,7 @@
   </head>
   <body xmlns:ng="http://angularjs.org" id="ng-app" ng-app="askApp">
 
-    <!--[if lt IE 7]>
+    <!--[if lte IE 8]>
       <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
     <![endif]-->
 
@@ -63,7 +64,6 @@
     <script src="{{ STATIC_URL }}survey/assets/lib/js/angular.js"></script>
     <script src="{{ STATIC_URL }}survey/assets/lib/js/angular-ui.js"></script>
     <script src="{{ STATIC_URL }}survey/assets/js/directives/ui-bootstrap-tpls-0.2.0.js"></script>
-
     <script src="{{ STATIC_URL }}survey/assets/lib/js/select2.js"></script>
     <script src="{{ STATIC_URL }}survey/assets/lib/js/underscore.js"></script>
     <script src="{{ STATIC_URL }}survey/assets/lib/js/underscore.string.js"></script>

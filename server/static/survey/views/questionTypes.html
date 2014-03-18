@@ -140,7 +140,9 @@
                   </li>
                 </ul>
             </div>
-            <input class="form-control input-block-level" type="text" placeholder="Other Option" ng-show="question.otherOption.checked" ng-model="question.otherAnswer" autofocus/>             
+            <div ng-show="question.otherOption.checked">
+                <input class="form-control input-block-level" type="text" placeholder="Other Option"  ng-model="question.otherAnswer" autofocus/>    
+            </div>         
             <button type="submit" class="btn btn-block btn-continue" ng-hide="dialog" ng-class="{'btn-primary': isAnswerValid, disabled: !isAnswerValid }">continue</button>
         </form>
     </div>
@@ -154,7 +156,9 @@
                 <a><h4 class="todo-name">{{ option.text || option.name }}</h4></a>
               </li>
             </ul>
-            <input class="form-control input-block-level" type="text" placeholder="Other Option" ng-show="question.otherOption.checked" ng-model="question.otherAnswer" autofocus/>             
+            <div ng-show="question.otherOption.checked">
+                <input class="form-control input-block-level" type="text" placeholder="Other Option" ng-model="question.otherAnswer" autofocus/>
+            </div>           
             <button type="submit" class="btn  btn-block btn-continue" ng-class="{'btn-primary': isAnswerValid, disabled: !isAnswerValid }">continue</button>
         </form>
     </div>
@@ -240,7 +244,10 @@
                 </ul>
               </div>
             </div>
-            <input class="form-control input-block-level" type="text" placeholder="Other Option" ng-show="question.allow_other && question.otherOption.checked" ng-model="question.otherAnswer" autofocus/> 
+            
+            <div ng-show="question.allow_other && question.otherOption.checked">
+                <input class="form-control input-block-level" type="text" placeholder="Other Option" ng-model="question.otherAnswer" autofocus/> 
+            </div>
             <button type="submit" class="btn btn-block btn-continue" ng-hide="dialog" ng-class="{'btn-primary': isAnswerValid, 'disabled': !isAnswerValid }">continue</button>
         </form>
     </div>

@@ -434,7 +434,6 @@ input.datepicker {
 }
 #question_bg input {
     border-radius: 0px;
-/*    float: right; */
     margin-bottom: 1em;
     list-style-type: none;
     padding: 22px;
@@ -460,6 +459,14 @@ input.datepicker {
 #question_bg .nav-pills > li.active a:hover {
     background-color: #eadd9a;
 }
+
+input.ng-invalid {
+    border-color: #e9322d;
+    -webkit-box-shadow: 0 0 6px #f8b9b7;
+    -moz-box-shadow: 0 0 6px #f8b9b7;
+    box-shadow: 0 0 6px #f8b9b7;
+}
+
 header.bar-title, header .button {
     background-color: #b9d7dd;
 }

@@ -140,3 +140,21 @@ angular.module('askApp')
         }
     }
 });
+
+angular.module('askApp')
+    .directive('placeholder', function() {
+
+    return {
+        restrict: 'EA',
+        
+        link: function (scope, element, attrs) {
+            /*
+            Add IE9 placeholder text handling.
+            */
+            if (!Modernizr.input.placeholder) {
+                debugger;
+                element.before("<label>"+scope.$parent.question.label+"</label>");
+             } // End id support.placeholder
+        }
+    }
+});
