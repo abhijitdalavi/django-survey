@@ -373,7 +373,7 @@ div[zoomto] .small-screen {
 }
 .modal-body {
     margin-bottom: 73px;
-    max-height: 400px;
+    max-height: 250px;
     /*overflow-y:scroll;*/
 }
 
