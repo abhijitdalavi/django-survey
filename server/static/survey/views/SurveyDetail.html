@@ -10,7 +10,7 @@
                     <div ng-hide="showProgressBar" class="progress">
                       <!-- <div class="progress-bar" style="width: {{ ((survey.questions.indexOf(question) + 1) / survey.questions.length) * 100 }}%;"></div> -->
                       <!-- <div class="bar noTransition" style="width: 50%;"></div> -->
-                      <div class="bar noTransition" style="width: {{ ((survey.questions.indexOf(question) + 1) / survey.questions.length) * 100 }}%;"></div>
+                      <div class="bar noTransition" ng-style="{ width: progressWidth + '%' }"></div>
                     </div>
                 </div>
             </div>

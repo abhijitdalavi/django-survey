@@ -368,7 +368,6 @@ angular.module('askApp')
         $scope.showProgressBar = $("html").is(".lt-ie9");
 
         $scope.isAuthenticated = isAuthenticated;
-
         // landing page view
         $scope.landingView = 'survey-pages/' + $routeParams.surveySlug + '/landing.html';
 
@@ -494,6 +493,12 @@ angular.module('askApp')
 
 
         $scope.getNextQuestion = function(numQsToSkips) {
+            /*
+            
+            Params:
+            numQsToSkip - [Integer] Optional, determines the number of questions to skip, defaults to 0.
+            Returns: String containing next question slug or false. 
+            */
             var foundQuestion = false,
                 index = numQsToSkips || 0;
             while (foundQuestion === false && index < $scope.survey.questions.length) {
@@ -565,9 +570,17 @@ angular.module('askApp')
             return undefined;
         };
 
-        $scope.skipIf = function(nextQuestion) {
-            var keep = true;
 
+        $scope.skipIf = function(nextQuestion) {
+            /*
+            Skip question
+            
+            Params
+            nextQuestion - [Question object] 
+            Returns: Boolean
+            */
+            
+            var keep = true;
             if (_.str.include(nextQuestion.slug, 'modal')) {
                 return true;
             }
@@ -1401,7 +1414,6 @@ angular.module('askApp')
 
             // penny question controller
             if ($scope.question && ($scope.question.type === 'pennies' || $scope.question.slug === 'pennies-intro')) {
-                //debugger;
                 if ($scope.question.options_from_previous_answer) {
                     $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[1]);
                     // $scope.primaryActivity = $scope.question.hoisted_options[0];
@@ -2360,6 +2372,9 @@ angular.module('askApp')
                 }
             }
 
+            // Update the progress bar width
+            var questionNum = _.indexOf($scope.survey.questions, $scope.question) + 1;
+            $scope.progressWidth = (questionNum / $scope.survey.questions.length) * 100;
         }; // end loadSurvey 
 
         $scope.viewPath = app.viewPath;

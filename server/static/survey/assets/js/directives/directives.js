@@ -152,9 +152,10 @@ angular.module('askApp')
             Add IE9 placeholder text handling.
             */
             if (!Modernizr.input.placeholder) {
-                debugger;
-                element.before("<label>"+scope.$parent.question.label+"</label>");
-             } // End id support.placeholder
+                if (typeof(scope.$parent.question) !== 'undefined') {
+                    element.before('<label>'+scope.$parent.question.label+'</label>');
+                }
+            } // End id support.placeholder
         }
-    }
+    };
 });
