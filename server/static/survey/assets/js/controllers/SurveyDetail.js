@@ -1413,6 +1413,7 @@ angular.module('askApp')
             }
 
             // penny question controller
+            // This is auto-answer the pennies question if there is only 1 location tied to a Primary Activity
             if ($scope.question && ($scope.question.type === 'pennies' || $scope.question.slug === 'pennies-intro')) {
                 if ($scope.question.options_from_previous_answer) {
                     $scope.primaryActivity = $scope.getAnswer($scope.question.options_from_previous_answer.split(',')[1]);
