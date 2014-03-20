@@ -62,6 +62,11 @@ class StaffUserOnlyAuthorization(Authorization):
 
 
 class AuthSurveyModelResource(SurveyModelResource):
+    """
+    Base class for authorization enabled resources.
+
+    """
+
     class Meta:
         authorization = StaffUserOnlyAuthorization()
         # authentication = MultiAuthentication(ApiKeyAuthentication(), SessionAuthentication())
@@ -69,6 +74,12 @@ class AuthSurveyModelResource(SurveyModelResource):
 
 
 class ResponseResource(AuthSurveyModelResource):
+    """
+    Response model resource.
+    <br>
+
+    """
+
     question = fields.ToOneField('apps.survey.api.QuestionResource', 'question', full=True)
     answer_count = fields.IntegerField(readonly=True)
 
@@ -82,6 +93,13 @@ class ResponseResource(AuthSurveyModelResource):
 
 
 class OfflineResponseResource(AuthSurveyModelResource):
+    """
+    Response model resource. Not sure what this is for. 
+    <br>
+
+
+    <br>    
+    """
     question = fields.ToOneField('apps.survey.api.QuestionResource', 'question', null=True, blank=True)
     respondant = fields.ToOneField('apps.survey.api.OfflineRespondantResource', 'respondant')
 
@@ -90,6 +108,12 @@ class OfflineResponseResource(AuthSurveyModelResource):
 
 
 class OfflineRespondantResource(AuthSurveyModelResource):
+    """
+    Respondant model resource. Respondants are a collection of Responses. 
+    <br>
+
+
+    """
     responses = fields.ToManyField(OfflineResponseResource, 'response_set', null=True, blank=True)
     survey = fields.ToOneField('apps.survey.api.SurveyResource', 'survey', null=True, blank=True)
 
@@ -108,6 +132,11 @@ class OfflineRespondantResource(AuthSurveyModelResource):
 
 
 class ReportRespondantResource(AuthSurveyModelResource):
+    """
+    Respondant model resource. 
+    <br>
+
+    """
     responses = fields.ToManyField(ResponseResource, 'response_set', full=False, null=True, blank=True)
     survey = fields.ToOneField('apps.survey.api.SurveyResource', 'survey', null=True, blank=True, readonly=True)
     user = fields.ToOneField('apps.account.api.UserResource', 'surveyor', null=True, blank=True, full=True, readonly=True)

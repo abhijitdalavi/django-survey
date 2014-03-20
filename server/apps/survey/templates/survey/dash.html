@@ -135,6 +135,7 @@
         admin_url: "{% url "admin:index" %}",
         logout_url: "{% url "admin:logout" %}",
         static_url: "{{STATIC_URL}}",
+        apitool_url: "{% url "api-tool" %}",
         api_key: "{{api_key}}"
       }
     {% else %}

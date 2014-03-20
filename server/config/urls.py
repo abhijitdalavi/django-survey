@@ -4,8 +4,6 @@ from django.conf import settings
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 
-from tastypie.api import Api
-
 from apps.survey import urls as survey_urls
 from apps.reports import urls as report_urls
 
@@ -13,7 +11,10 @@ from apps.survey.api import *
 from apps.places.api import *
 from apps.account.api import *
 
-v1_api = Api(api_name='v1')
+from utils import DirectTemplateView, DocApi
+
+
+v1_api = DocApi(api_name='v1')
 
 v1_api.register(SurveyResource())
 v1_api.register(RespondantResource())
@@ -61,6 +62,7 @@ urlpatterns = patterns('',
     url(r'^dash$', 'apps.survey.views.dash', name='dashboard'),
     #other survey urls
     url(r'^dash', include(survey_urls)),
+    
 
     # Redirect / to /dash
     url(r'^$', lambda r: HttpResponseRedirect('/dash')),
@@ -71,6 +73,8 @@ urlpatterns = patterns('',
     # django-registration urls
     (r'^accounts/', include('registration.backends.default.urls')),
 
+    url(r'^api-tool/?$', DirectTemplateView.as_view(template_name= 'api_tool.html', 
+            extra_context = {}), name="api-tool" ),
 
 )
 

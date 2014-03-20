@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" type="text/javascript"></script>
+  <style>
+        #results {
+            height:400px;
+            overflow:scroll;
+            border:1px solid black;
+        }
+        [type=text] {
+            width:300px;
+        }  
+        .link:hover {
+            cursor:pointer;
+            background:#ccc;
+        }
+        .controls {
+          overflow:auto;
+        } 
+        .left {
+
+          float:left;
+          width:50%;
+        }
+
+        .right {
+          float:right;
+          width:50%;
+          position:fixed;
+          right:0;
+          top:0;
+        }
+
+        .padded {
+          padding:0.5em;
+        }
+
+        dt {
+          font-weight: bold;
+          font-size: 1.2em;
+        }
+
+        dd {
+          padding-left:1.5em;
+        }
+    </style>
+
+<script>
+	window.API_BASE_URL = "/api/v1/";
+	function getURLParameter(name) {
+	   return decodeURIComponent(
+	       (RegExp(name + '=' + '(.+?)(&|$)', 'i').exec(location.search) || [, ""])[1]
+	   );
+	}
+
+	function fetch(){
+        var qs = $("[name=qs]").val();
+        var url = API_BASE_URL + qs;
+        
+        var api_key = $("[name=api_key]").val();
+        var username = $("[name=username]").val();
+        var data = {};
+        
+        $.ajax({
+          url: url,
+          type: 'GET',
+          beforeSend: function(xhrObj){
+            xhrObj.setRequestHeader("Authorization", "ApiKey " +username+":"+api_key);
+            xhrObj.setRequestHeader('Content-Type', 'application/json');
+          },
+          contentType: 'application/json; charset=utf-8',
+          dataType: 'json',
+          processData: false,
+          complete:function(jqXHR, status){
+            ajax_complete(jqXHR, status);
+          },
+          success:function(rs){
+            _log(url);
+            _log(JSON.stringify(rs));
+          }
+
+        });   
+    }
+
+    function ajax_complete(jqXHR, status){
+        _log("Result status: " + jqXHR.status + " " + jqXHR.statusText);
+        window.status = status;
+        window.jqXHR = jqXHR;
+    }
+
+    function _log(text) {
+        $("#results").append("<div>"+text+"</div><br/>");    
+    }
+
+
+    function endpointCallback(that){
+        var raw = $(that).html();
+        qs = raw.split(API_BASE_URL)[1];
+        $("[name=qs]").val(qs);
+        fetch();
+    }
+
+    // Bind enter key to go button
+    $("[name=qs]").keypress(function(e){
+        if (e.which === 13){
+            fetch();
+        }
+    });
+
+
+	$(document).ready(function(){                
+	    // Set username and api_key
+	    var val = getURLParameter("username");
+	    if (val.length>0) { 
+	        $("[name=username]").val(val);
+	        window.USERNAME = val;
+	    }      
+	    val = getURLParameter("api_key") 
+	    if (val.length>0) {
+	        $("[name=api_key]").val(val);
+	        window.API_KEY=val;
+	     }
+	    
+	     $.get(API_BASE_URL+"?format=json", function(rs){
+	        for ( i in rs){
+
+	            var html = "<dt class='link padded' onclick='endpointCallback(this);'>"+rs[i].list_endpoint+"</dt>"+"<dd>"+rs[i].docstring+"<br>";
+	            
+	            // Add fields
+	            html += "<br><strong>Fields</strong><br>";
+	            for (j in rs[i].fields){
+	            	html += "-&nbsp;<abbr title='" +rs[i].fields[j].type+ "'>" + rs[i].fields[j].name + "</abbr>: " + rs[i].fields[j].help_text
+	            	html += "<br>";
+	            }
+
+	            // Add filters
+				html += "<br><strong>Filters</strong><br>";
+	            for (j in rs[i].filters){
+	            	html += "-&nbsp;" + rs[i].filters[j] + "<br>";
+	            }	            
+
+	            $("#endpoints").append(html);                
+	        }
+	     },'json');
+
+	     // Bind enter key to go button
+	     $("[name=qs]").keypress(function(e){
+	        if (e.which == 13){
+	            fetch();
+	        }
+	    });
+	});
+</script>
+ 
+</head>
+<body>
+	<div class="wrapper">
+		<div class="left">
+			<h2>Endpoints</h2>
+			<div id="endpoints"></div>
+		</div>
+		<div class="right">
+			<div>
+              	{{SITE_DOMAIN}}/api/v1/<input type="text" name="qs" placeholder="RESOURCE/XX/"></a>
+              	<button onclick="fetch();">GET &raquo;</button>
+              	<hr>
+        
+             	<button onclick="$('#results').html(''); return false;">Clear Results</button>
+             	<dl id="results"></dl>
+          	</div>
+		</div>
+
+	</div>
+</body>

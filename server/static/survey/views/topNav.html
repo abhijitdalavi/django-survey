@@ -8,6 +8,7 @@
             <li><p class="navbar-text">SIGNED IN AS {{user.username | uppercase}}</p></li>
             <li><a href="{{user.logout_url}}">SIGN OUT</a></li>
             <li><a ng-show="user.is_superuser" href="{{user.admin_url}}">ADMIN</a></li>
+            <li><a ng-show="user.is_superuser" href="{{user.apitool_url}}">API TOOL</a></li>
         </ul>
     </div>
 </nav>
