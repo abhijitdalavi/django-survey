@@ -252,6 +252,11 @@ class BlockResource(AuthSurveyModelResource):
 
 
 class QuestionResource(AuthSurveyModelResource):
+    """
+    Used to get a question (and text) for a survey and to author a question. 
+    """
+
+
     options = fields.ToManyField(OptionResource, 'options', full=True, null=True, blank=True)
     grid_cols = fields.ToManyField(OptionResource, 'grid_cols', full=True, null=True, blank=True)
     modalQuestion = fields.ToOneField('self', 'modalQuestion', full=True, null=True, blank=True)

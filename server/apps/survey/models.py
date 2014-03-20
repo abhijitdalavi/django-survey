@@ -283,28 +283,50 @@ class Block(caching.base.CachingMixin, models.Model):
 
 class Question(caching.base.CachingMixin, models.Model):
     title = models.TextField()
-    label = models.CharField(max_length=254)
-    order = models.IntegerField(default=0)
-    slug = models.SlugField(max_length=64)
-    type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default='text')
-    options = models.ManyToManyField(Option, null=True, blank=True)
-    options_json = models.TextField(null=True, blank=True)
-    rows = models.TextField(null=True, blank=True)
-    cols = models.TextField(null=True, blank=True)
-    info = models.CharField(max_length=254, null=True, blank=True)
-    grid_cols = models.ManyToManyField(Option, null=True, blank=True, related_name="grid_cols")
+    label = models.CharField(max_length=254,
+            help_text="Short version of tile, used as the placeholder text and other places as a label.")
+    order = models.IntegerField(default=0,
+            help_text="Order it shows up in the survey")
+    slug = models.SlugField(max_length=64,
+            help_text="Uses entered slug to identify the question, This should be unique for the survey")
+    type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default='text',
+            help_text="The type of question. The front enter uses this to determine UI and how the answer is parsed")
+    options = models.ManyToManyField(Option, null=True, blank=True, 
+            help_text="DEPRACTED 3/20/2014")
+    grid_cols = models.ManyToManyField(Option, null=True, blank=True, related_name="grid_cols",
+            help_text="The columns in a grid")
+    options_json = models.TextField(null=True, blank=True, 
+            help_text="Name of JSON files that contains the options for the question")
+    rows = models.TextField(null=True, blank=True,
+            help_text="New line seperated options for single select, multi-select, and grid rows.")
+    cols = models.TextField(null=True, blank=True,
+            help_text="Not currently used")
+    info = models.CharField(max_length=254, null=True, blank=True,
+            help_text="The name of a file that is used to Angular partial for a question info page")
+    
+    # map question fields
+    zoom = models.IntegerField(null=True, blank=True, 
+            help_text="Initial zoom level for type=map-multipoint")
+    min_zoom = models.IntegerField(null=True, blank=True, default=10,
+            help_text="Minimum zoom level before a point can be taken")
+    lat = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True,
+            help_text="Initial map latitude")
+    lng = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True,
+            help_text="Initial map longitude")
 
-    zoom = models.IntegerField(null=True, blank=True)
-    min_zoom = models.IntegerField(null=True, blank=True, default=10)
-    lat = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
-    lng = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True)
-    integer_min = models.IntegerField(default=None, null=True, blank=True)
-    integer_max = models.IntegerField(default=None, null=True, blank=True)
-    term_condition = models.CharField(max_length=254, null=True, blank=True)
-    skip_question = models.ForeignKey('self', null=True, blank=True)
-    skip_condition = models.CharField(max_length=254, null=True, blank=True)
-
-    blocks = models.ManyToManyField('Block', null=True, blank=True)
+    integer_min = models.IntegerField(default=None, null=True, blank=True,
+            help_text="For type=integer")
+    integer_max = models.IntegerField(default=None, null=True, blank=True,
+            help_text="For type=integer")
+    term_condition = models.CharField(max_length=254, null=True, blank=True,
+            help_text="""The termination condition. This is used to determine is 
+                        the survey should continue. Should start with <, >, =.""")
+    skip_question = models.ForeignKey('self', null=True, blank=True, 
+            help_text="DEPRACTED 3/20/2014")
+    skip_condition = models.CharField(max_length=254, null=True, blank=True,
+            help_text="DEPRACTED 3/20/2014")
+    blocks = models.ManyToManyField('Block', null=True, blank=True,
+            help_text="")
 
     randomize_groups = models.BooleanField(default=False)
     options_from_previous_answer = models.CharField(max_length=254, null=True, blank=True)
