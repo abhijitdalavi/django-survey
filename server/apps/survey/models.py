@@ -33,20 +33,30 @@ REVIEW_STATE_CHOICES = (
 
 
 class Respondant(caching.base.CachingMixin, models.Model):
-    uuid = models.CharField(max_length=36, primary_key=True, default=make_uuid, editable=False)
-    survey = models.ForeignKey('Survey')
-    # responses = models.ManyToManyField('Response', related_name='responses', null=True, blank=True)
-    gfk_returnURL = models.URLField(max_length=500, default=None, null=True, blank=True)
-    complete = models.BooleanField(default=False)
-    status = models.CharField(max_length=20, choices=STATE_CHOICES, default=None, null=True, blank=True)
-    review_status = models.CharField(max_length=20, choices=REVIEW_STATE_CHOICES, default=REVIEW_STATE_NEEDED)
-    review_comment = models.TextField(null=True, blank=True)
-    last_question = models.CharField(max_length=240, null=True, blank=True)
+    uuid = models.CharField(max_length=36, primary_key=True, default=make_uuid, editable=False,
+            help_text="Unique ID for the Survey session. This is the primary key. This coulld come from Knowledge Network")
+    survey = models.ForeignKey('Survey',
+            help_text="The survey that this set of answers belongs to.")
+    gfk_returnURL = models.URLField(max_length=500, default=None, null=True, blank=True,
+            help_text="Knowledge Network URL for this respondant")
+    complete = models.BooleanField(default=False,
+            help_text="Flag to determine if this survey has been completed. Set by the client.")
+    status = models.CharField(max_length=20, choices=STATE_CHOICES, default=None, null=True, blank=True,
+            help_text="Flag to detemine if the respondant was completed or terminated (based on termination question response)")
+    review_status = models.CharField(max_length=20, choices=REVIEW_STATE_CHOICES, default=REVIEW_STATE_NEEDED,
+            help_text="Flag to signifiy review status")
+    review_comment = models.TextField(null=True, blank=True,
+            help_text="Free type field for survey reviewer to add a comment")
+    last_question = models.CharField(max_length=240, null=True, blank=True,
+            help_text="Slug of the last question answer. Mostly used on reports to see where the user stopped")
 
-    vendor = models.CharField(max_length=240, null=True, blank=True)
+    # Filtering fields
+    vendor = models.CharField(max_length=240, null=True, blank=True,
+            help_text="")
     survey_site = models.CharField(max_length=240, null=True, blank=True)
     buy_or_catch = models.CharField(max_length=240, null=True, blank=True)
     how_sold = models.CharField(max_length=240, null=True, blank=True)
+
 
     locations = models.IntegerField(null=True, blank=True)
 
@@ -274,8 +284,10 @@ REPORT_TYPE_CHOICES = (
 
 class Block(caching.base.CachingMixin, models.Model):
     name = models.CharField(max_length=254, null=True, blank=True)
-    skip_question = models.ForeignKey('Question', null=True, blank=True)
-    skip_condition = models.CharField(max_length=254, null=True, blank=True)
+    skip_question = models.ForeignKey('Question', null=True, blank=True,
+            help_text="The question who's answer is used to determine whether or not to skip")
+    skip_condition = models.CharField(max_length=254, null=True, blank=True,
+            help_text="The skip condition. Must start with >, <, !, =")
 
     def __unicode__(self):
         return "%s" % self.name
@@ -284,19 +296,19 @@ class Block(caching.base.CachingMixin, models.Model):
 class Question(caching.base.CachingMixin, models.Model):
     title = models.TextField()
     label = models.CharField(max_length=254,
-            help_text="Short version of tile, used as the placeholder text and other places as a label.")
+            help_text="Short version of title, used as the placeholder text and other places as a label.")
     order = models.IntegerField(default=0,
-            help_text="Order it shows up in the survey")
+            help_text="Determines the order the question shows up in the survey")
     slug = models.SlugField(max_length=64,
-            help_text="Uses entered slug to identify the question, This should be unique for the survey")
+            help_text="User-entered slug to identify the question, This should be unique for the survey")
     type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default='text',
-            help_text="The type of question. The front enter uses this to determine UI and how the answer is parsed")
+            help_text="The type of question. The front-end uses this to determine UI and how the answer is parsed")
     options = models.ManyToManyField(Option, null=True, blank=True, 
             help_text="DEPRACTED 3/20/2014")
     grid_cols = models.ManyToManyField(Option, null=True, blank=True, related_name="grid_cols",
             help_text="The columns in a grid")
     options_json = models.TextField(null=True, blank=True, 
-            help_text="Name of JSON files that contains the options for the question")
+            help_text="Name of JSON file that contains the options for the question")
     rows = models.TextField(null=True, blank=True,
             help_text="New line seperated options for single select, multi-select, and grid rows.")
     cols = models.TextField(null=True, blank=True,
@@ -322,25 +334,35 @@ class Question(caching.base.CachingMixin, models.Model):
             help_text="""The termination condition. This is used to determine is 
                         the survey should continue. Should start with <, >, =.""")
     skip_question = models.ForeignKey('self', null=True, blank=True, 
-            help_text="DEPRACTED 3/20/2014")
+            help_text="DEPRACTED 3/20/2014. These are handled in blocks now")
     skip_condition = models.CharField(max_length=254, null=True, blank=True,
-            help_text="DEPRACTED 3/20/2014")
+            help_text="DEPRACTED 3/20/2014. These are handled in blocks now ")
     blocks = models.ManyToManyField('Block', null=True, blank=True,
-            help_text="")
+            help_text="A collection of questions. Blocks contain skip logic.")
 
-    randomize_groups = models.BooleanField(default=False)
-    options_from_previous_answer = models.CharField(max_length=254, null=True, blank=True)
-    allow_other = models.BooleanField(default=False)
-    required = models.BooleanField(default=True)
-    modalQuestion = models.ForeignKey('self', null=True, blank=True, related_name="modal_question")
-    hoist_answers = models.ForeignKey('self', null=True, blank=True, related_name="hoisted")
-    foreach_question = models.ForeignKey('self', null=True, blank=True, related_name="foreach")
+    randomize_groups = models.BooleanField(default=False,
+            help_text="Flag to randominze options list. If false, options are displayed in the order specified")
+    options_from_previous_answer = models.CharField(max_length=254, null=True, blank=True,
+            help_text="Answers from a previuos multi-select question")
+    allow_other = models.BooleanField(default=False,
+            help_text="Flag to allow for 'Other' options. This will present a free-typed text field to the user.")
+    required = models.BooleanField(default=True,
+            help_text="Flag to determine wether or not an answer required")
+    modalQuestion = models.ForeignKey('self', null=True, blank=True, related_name="modal_question",
+            help_text="Embeds this question in modal that is displayed on its parent question. Used mainly for map questions. Should allows for multiple modals.")
+    hoist_answers = models.ForeignKey('self', null=True, blank=True, related_name="hoisted",
+            help_text="Answer that should be displayed first. Mainly used to bring previuos choices to the top.")
+    foreach_question = models.ForeignKey('self', null=True, blank=True, related_name="foreach",
+            help_text="DEPRACTED 3/20/2014.")
 
     # backend stuff
-    filterBy = models.BooleanField(default=False)
-    visualize = models.BooleanField(default=False)
-    report_type = models.CharField(max_length=20, choices=REPORT_TYPE_CHOICES, null=True, default=None)
-    filter_questions = models.ManyToManyField('self', null=True, blank=True)
+    filterBy = models.BooleanField(default=False,
+            help_text="LEGACY - Used in older survey in the dashboard.")
+    visualize = models.BooleanField(default=False, help_text="LEGACY - Used in older survey in the dashboard.")
+    report_type = models.CharField(max_length=20, choices=REPORT_TYPE_CHOICES, null=True, default=None,
+            help_text="LEGACY - Used in older survey in the dashboard.")
+    filter_questions = models.ManyToManyField('self', null=True, blank=True,
+            help_text="LEGACY - Used in older survey in the dashboard.")
 
     @property
     def answer_domain(self):
@@ -438,25 +460,36 @@ class MultiAnswer(caching.base.CachingMixin, models.Model):
 
 class GridAnswer(caching.base.CachingMixin, models.Model):
     response = models.ForeignKey('Response')
-    row_text = models.TextField(null=True, blank=True)
-    row_label = models.TextField(null=True, blank=True)
-    col_text = models.TextField(null=True, blank=True)
-    col_label = models.TextField(null=True, blank=True)
-    answer_text = models.TextField(null=True, blank=True)
-    answer_number = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    row_text = models.TextField(null=True, blank=True,
+            help_text="Row label text. This comes from questions.rows. This is visible to the user")
+    row_label = models.TextField(null=True, blank=True,
+            help_text="Row label slug. This comes from questions.rows")
+    col_text = models.TextField(null=True, blank=True,
+            help_text="Column label text. This comes from questions.cols. This is visible to the user")
+    col_label = models.TextField(null=True, blank=True,
+            help_text="Column label text. This comes from questions.cols")
+    answer_text = models.TextField(null=True, blank=True,
+            help_text="Answer text for text based answers")
+    answer_number = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,
+            help_text="Answer value for numeric based answers")
 
     def __unicode__(self):
         return "%s: %s" % (self.row_text, self.col_text)
 
 
 class Response(caching.base.CachingMixin, models.Model):
-    question = models.ForeignKey(Question)
-    respondant = models.ForeignKey(Respondant, null=True, blank=True)
-    answer = models.TextField(null=True, blank=True)
-    answer_number = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    answer_raw = models.TextField(null=True, blank=True)
-    answer_date = models.DateTimeField(null=True, blank=True)
-    ts = models.DateTimeField()
+    question = models.ForeignKey(Question, help_text="Question that this response (answer)")
+    respondant = models.ForeignKey(Respondant, null=True, blank=True,
+            help_text="The collection of responses that this answer belongs to.")
+    answer = models.TextField(null=True, blank=True,
+            help_text="This is a text representation of the answer. This is used a a simple display, no parsing needed. Populated when the answer is saved")
+    answer_number = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,
+            help_text="Used for numeric type answer (e.g. integer, currency, number). Populated when the answer is saved")
+    answer_raw = models.TextField(null=True, blank=True,
+            help_text="The is the raw JSON string. Format depends on the type fo question")
+    answer_date = models.DateTimeField(null=True, blank=True,
+            help_text="Indexer for user entered date")
+    ts = models.DateTimeField(help_text="Client generated timestamp.")
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     objects = caching.base.CachingManager()
 

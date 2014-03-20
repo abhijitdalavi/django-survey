@@ -686,8 +686,8 @@ angular.module('askApp')
 
             if ($scope.dialog) {
                 // if (!$scope.question.update) {
-                    $scope.dialog.options.save($scope.question, answer);
-                    $scope.dialog.options.showNext($scope.question);
+                $scope.dialog.options.save($scope.question, answer);
+                $scope.dialog.options.showNext($scope.question);
                     // $scope.dialog.$scope.close('askIfDone');
                 // } else {
                 //     $scope.dialog.options.save($scope.question, answer);
